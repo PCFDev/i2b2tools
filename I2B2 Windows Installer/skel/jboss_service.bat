@@ -7,7 +7,13 @@ REM
 REM -------------------------------------------------------------------------
 REM JBoss Service Script for Windows
 REM -------------------------------------------------------------------------
-
+REM
+REM ITL Corrections
+REM	Changed service name, display & description
+REM Changed run.bat t0 standalone.bat
+REM Changed shutdown -S to jboss-cli.bat --connect --command=:shutdown
+REM TODO: change log file paths....
+REM
 
 @if not "%ECHO%" == "" echo %ECHO%
 @if "%OS%" == "Windows_NT" setlocal
@@ -17,9 +23,9 @@ REM
 REM VERSION, VERSION_MAJOR and VERSION_MINOR are populated
 REM during the build with ant filter.
 REM
-set SVCNAME=JBAS50SVC
-set SVCDISP=JBoss Application Server 5.0
-set SVCDESC=JBoss Application Server 5.0.0 GA/Platform: Windows x64
+set SVCNAME=JBOSS
+set SVCDISP=JBoss Application Server 7.1.1
+set SVCDESC=JBoss Application Server 7.1.1 GA/Platform: Windows x64
 set NOPAUSE=Y
 
 REM Suppress killing service on logoff event
@@ -101,7 +107,7 @@ jbosssvc.exe -s 1
 if exist ".r.lock" goto waitRun
 echo Y > .r.lock
 jbosssvc.exe -p 1 "Restarting %SVCDISP%" >> run.log
-call run.bat < .r.lock >> run.log 2>&1
+call standalone.bat < .r.lock >> run.log 2>&1
 jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> run.log
 del .r.lock
 goto cmdEnd

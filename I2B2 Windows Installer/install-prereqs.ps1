@@ -76,10 +76,13 @@ if($jbossSvc -eq $null){
 
     unzip $__tempFolder\jboss-svc.zip $env:JBOSS_HOME
 
+    cp skel\jboss_service.bat $env:JBOSS_HOME\bin\service.bat -force
+
     &$env:JBOSS_HOME\bin\service.bat install
 
     #replace run.bat with standalone.bat
     #replace (call shutdown -S) with (call jboss-cli.bat --connect --command=:shutdown)
 
+    #Set to auto start...
 
 }
