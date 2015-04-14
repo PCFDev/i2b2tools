@@ -75,20 +75,18 @@ function addToPath($pathToAppend){
 
     if(![System.Environment]::GetEnvironmentVariable("PATH").Contains($pathToAppend)){
 
-        echo "Adding $($pathToAppend) bin to PATH"
+        echo "Adding $($pathToAppend) to PATH"
         
 
         #verify that the current path ends with ; or append it to the start of the pathToAppend
 
-        if(!$env:PATH.EndsWith(";")){
+        if($env:PATH.EndsWith(";") -eq $false){
             $pathToAppend = ";" + $pathToAppend
         }
+     
+        $newPath = ($env:PATH + $pathToAppend)
 
-        echo $pathToAppend
-
-        $newPath = $env:PATH + $pathToAppend
-
-        echo $newPath
+        echo "New path: $newPath"
 
         setEnvironmentVariable "PATH" $newPath
     }

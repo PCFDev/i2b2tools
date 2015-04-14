@@ -6,6 +6,7 @@
 *.log
 *.zip
 .temp/
+_downloads/
 
 # User-specific files
 *.suo
