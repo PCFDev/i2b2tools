@@ -3,6 +3,44 @@
 echo "importing functions"
 
 
+function exec{
+    Param(
+        [parameter(Mandatory=$true)]
+	    [string]$path,
+        [parameter(Mandatory=$false)]
+	    [string]$args = ""
+    )
+
+    write-host "Running " $path
+
+    $pinfo = New-Object System.Diagnostics.ProcessStartInfo
+    $pinfo.FileName = $path
+    $pinfo.RedirectStandardError = $true
+    $pinfo.RedirectStandardOutput = $true
+    $pinfo.UseShellExecute = $false
+    $pinfo.Arguments = $args
+    $p = New-Object System.Diagnostics.Process
+    $p.StartInfo = $pinfo
+    $p.Start() | Out-Null
+    $p.WaitForExit()
+    $stdout = $p.StandardOutput.ReadToEnd()
+    $stderr = $p.StandardError.ReadToEnd()
+
+
+    
+    if($p.ExitCode -ne 0) {
+        Write-Host "stdout: $stdout"
+        Write-Host "stderr: $stderr"
+        Write-Host "exit code: " + $p.ExitCode
+    	Throw "ERROR"
+    }
+
+      write-host $path " completed"
+
+
+}
+
+
 function setEnvironmentVariable($name, $value){
     [System.Environment]::SetEnvironmentVariable($name, $value, 'machine')
     [System.Environment]::SetEnvironmentVariable($name, $value, 'process')
@@ -23,17 +61,37 @@ function export ([string]$variableAndValue){
    
 }
 
-function appendToPath($pathToAppend){
-
-    #verify that the current path ends with ; or append it to the start of the pathToAppend
-
-    if(!$env:PATH.EndsWith(";")){
-        $pathToAppend = ";" + $pathToAppend
+function require($value, [string]$message = "value cannot be null"){
+    
+    if($value -eq $null){
+        Throw $message
     }
 
-    echo $pathToAppend
+}
 
-    setEnvironmentVariable "PATH" $env:PATH + $pathToAppend
+function addToPath($pathToAppend){
+
+
+
+    if(![System.Environment]::GetEnvironmentVariable("PATH").Contains($pathToAppend)){
+
+        echo "Adding $($pathToAppend) bin to PATH"
+        
+
+        #verify that the current path ends with ; or append it to the start of the pathToAppend
+
+        if(!$env:PATH.EndsWith(";")){
+            $pathToAppend = ";" + $pathToAppend
+        }
+
+        echo $pathToAppend
+
+        $newPath = $env:PATH + $pathToAppend
+
+        echo $newPath
+
+        setEnvironmentVariable "PATH" $newPath
+    }
 
 }
 
@@ -61,9 +119,15 @@ function isJavaInstalled {
     #>    
   
     try{
-        $out = &"java.exe" -version 2>&1
-        $javaVer = $out[0].tostring();
-        return ($javaVer -gt "")
+
+        $java = Get-WmiObject -Class win32_product | where { $_.Name -like "*Java*"}
+
+        #$out = &"java.exe" -version 2>&1
+        #$javaVer = $out[0].tostring();
+        #return ($javaVer -gt "")
+
+        return ($java.Count -gt 0)
+
     } catch {
         return $false
     }
@@ -71,6 +135,8 @@ function isJavaInstalled {
 
 
 function removeTempFolder{
+  
+
     if(Test-Path $__tempFolder){
 	    Remove-Item $__tempFolder -recurse
     }   
@@ -78,9 +144,12 @@ function removeTempFolder{
 
 function createTempFolder{
     
+  
     removeTempFolder
 
-    New-Item $__tempFolder -Type directory -Force
+    New-Item $__tempFolder -Type directory -Force > $null
+
+    write-host "Created " $__tempFolder
 }
 
 

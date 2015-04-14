@@ -1,6 +1,8 @@
-Add-Type -AssemblyName System.IO.Compression.FileSystem
+#Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-
+require $env:JAVA_HOME "JAVA_HOME must be set"
+require $env:ANT_HOME "ANT_HOME must be set"
+require $env:JBOSS_HOME "JBOSS_HOME must be set"
 
 if((isJavaInstalled) -eq $false){
     $client = new-object System.Net.WebClient 
@@ -23,26 +25,30 @@ if((isJavaInstalled) -eq $false){
     #$proc = Start-Process $__tempFolder"\jdk.exe" -ArgumentList $arguments -Wait -PassThru
 
     $__javaInstallerPath = $__tempFolder + "\jdk.exe"
+   
+    #$proc = Start-Process -FilePath $__javaInstallerPath -ArgumentList '/s INSTALLDIR=c:\opt\java /L C:\opt\java-install.log'  -Wait -PassThru    
 
-    $proc = Start-Process -FilePath $__javaInstallerPath -ArgumentList '/s INSTALLDIR=c:\opt\java /L C:\opt\java-install.log'
+    #if($proc.ExitCode -ne 0) {
+    #	    Throw "ERROR"
+    #}
+   
+    exec $__javaInstallerPath '/s INSTALLDIR=c:\opt\java /L C:\opt\java-install.log'
 
-    if($proc.ExitCode -ne 0) {
-	    Throw "ERROR"
-    }
     echo "Java Installed"
 }
 
-if($env:JAVA_HOME -eq ""){
-    [System.Environment]::SetEnvironmentVariable('JAVA_HOME', $env:JAVA_HOME, 'machine')
-    echo "JAVA_HOME environment variable set"
-}
+#if($env:JAVA_HOME -eq ""){   
+#    [System.Environment]::SetEnvironmentVariable('JAVA_HOME', $env:JAVA_HOME, 'machine')
+#    echo "JAVA_HOME environment variable set"
+#}
 
-if(![System.Environment]::GetEnvironmentVariable("PATH").Contains($env:JAVA_HOME)){
+#if(![System.Environment]::GetEnvironmentVariable("PATH").Contains($env:JAVA_HOME)){
 
-    echo "Adding JAVA bin to PATH"
-    appedToPath $env:JAVA_HOME + "\bin;"
-}
+#   echo "Adding JAVA bin to PATH"
+#    appendToPath $env:JAVA_HOME + "\bin;"
+#}
 
+addToPath ($env:JAVA_HOME + "\bin;")
 
 
 
@@ -76,15 +82,16 @@ if((isAntInstalled) -eq $false){
 
 }
 
-if($env:ANT_HOME -eq ""){
-    [System.Environment]::SetEnvironmentVariable('ANT_HOME', $env:ANT_HOME, 'machine')
-    echo "ANT_HOME environment variable set"
-}
+#if($env:ANT_HOME -eq ""){
+#    [System.Environment]::SetEnvironmentVariable('ANT_HOME', $env:ANT_HOME, 'machine')
+#    echo "ANT_HOME environment variable set"
+#}
 
 
-if(![System.Environment]::GetEnvironmentVariable("PATH").Contains($env:ANT_HOME)){
+addToPath ($env:ANT_HOME + "\bin;")
 
-    echo "Adding ANT bin to PATH"
-    appedToPath $env:ANT_HOME + "\bin;"
-}
+#if(![System.Environment]::GetEnvironmentVariable("PATH").Contains($env:ANT_HOME)){
+    #echo "Adding ANT bin to PATH"
+    #appendToPath $env:ANT_HOME + "\bin;"
+#}
 

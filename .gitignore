@@ -5,7 +5,7 @@
 .svn
 *.log
 *.zip
-
+.temp/
 
 # User-specific files
 *.suo

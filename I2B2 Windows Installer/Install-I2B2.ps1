@@ -32,9 +32,21 @@ Param(
 )
 
 
-. .\configuration.ps1
 . .\functions.ps1
+. .\configuration.ps1
 
+
+ if(Test-Path $__rootFolder){
+
+ #Todo ... this is not proper
+
+} else {
+ 
+    New-Item $__rootFolder -Type directory -Force > $null
+
+    write-host "Created " $__rootFolder
+}
+  
 
 #Create a directory to work out of
 createTempFolder
@@ -43,9 +55,9 @@ if($InstallPrereqs -eq $true){
     . .\InstallPrereqs.ps1
 }
 
+
 unzip $__sourceCodeZipFile $__sourceCodeRootFolder
 
-#. .\ExtractSource.ps1
 
 #clean up after ourself
 #removeTempFolder
