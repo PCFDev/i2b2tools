@@ -1,2 +1,2 @@
-# i2b2tools
-A collection of tools for use with i2b2
+# i2b2 Tools
+A collection of tools created by [Washington University in St. Louis Pediatrics Development Team](http://wus.tl/pcf) for use with [i2b2](http://i2b2.org)
