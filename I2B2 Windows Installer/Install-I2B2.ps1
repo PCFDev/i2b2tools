@@ -52,12 +52,12 @@ Param(
 createTempFolder
 
 if($InstallPrereqs -eq $true){
-    . .\InstallPrereqs.ps1
+    . .\install-prereqs.ps1
 }
 
-
+echo "Extracting i2b2 source..."
 unzip $__sourceCodeZipFile $__sourceCodeRootFolder
-
+echo "Source extracted to $__sourceCodeRootFolder"
 
 #clean up after ourself
 #removeTempFolder
