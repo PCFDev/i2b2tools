@@ -1,6 +1,15 @@
 ﻿<#
+.AUTHOR
+Josh Hahn
+Pediatrics Development Team
+Washington University in St. Louis
+
+.DATE
+April 14, 2015
+#>
+<#
 .SYNOPSIS
-Install tomcat on Windows Server
+Install tomcat 8 on Windows Server
 
 
 .DESCRIPTION
