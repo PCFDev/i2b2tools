@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.jboss.org/ironjacamar/schema">
+
+
+
+	<datasource jta="false" jndi-name="java:/PMBootStrapDS"
+		pool-name="PMBootStrapDS" enabled="true" use-ccm="false">
+		<connection-url>I2B2_DB_PM_JDBC_URL</connection-url>
+		<driver-class>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver-class>
+		<driver>sqljdbc4.jar</driver>
+		<security>
+			<user-name>I2B2_DB_PM_USER</user-name>
+			<password>I2B2_DB_PM_PASSWORD</password>
+		</security>
+		<validation>
+			<valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker"></valid-connection-checker>
+            <validate-on-match>false</validate-on-match>
+		</validation>
+		<statement>
+			<share-prepared-statements>false</share-prepared-statements>
+		</statement>
+	</datasource>
+
+
+</datasources>

@@ -1,0 +1,145 @@
+#!/bin/bash
+
+#########
+# I2B2 Environment variables
+#
+# You can install by setting the i2b2 IP address and then using defaults.
+# You MUST change the default passwords for production operation.
+#
+# To include this script for your logon, you can add a line to your bash profile like this
+# vi ~/.bashrc
+#########
+
+COMMON_RC_FILE=common.rc
+
+if [ -f ~/${COMMON_RC_FILE} ] ; then
+  source ~/${COMMON_RC_FILE}
+elif [ -f ../../${COMMON_RC_FILE} ] ; then
+  source ../../${COMMON_RC_FILE}
+else
+  echo "Either ~/${COMMON_RC_FILE} or ../../${COMMON_RC_FILE} must be present" ; exit -1
+fi
+
+# at-a-glance way to check whether we're using Oracle or Postgres or MSSQL
+export I2B2_RDBMS=sqlserver
+
+#
+#WILL NEED TO CHANGE IF NOT IN I2B2 VM
+
+#The i2b2 user Shrine should log in as.
+export SHRINE_USER=shrine
+
+#The plaintext password for the i2b2 user Shrine should log in as.
+export SHRINE_OBFUSCATED_WEBCLIENT_PASSWORD=demouser
+
+#SHRINE_OBFUSCATED_WEBCLIENT_PASSWORD hashed with i2b2's password-hashing algorithm
+if [ -f ../I2b2PasswordCryptor.java ] ; then
+  export SHRINE_PASSWORD_CRYPTED=`javac ../I2b2PasswordCryptor.java && java -classpath ../ I2b2PasswordCryptor ${SHRINE_OBFUSCATED_WEBCLIENT_PASSWORD}`
+fi
+
+#The directory containing the JBoss application server that i2b2 runs in.
+export JBOSS_HOME=/opt/jboss
+if [ ! -d $JBOSS_HOME ] ; then
+  # try alternative versioned JBoss directory (used by newer VM images)
+  export JBOSS_HOME=( ${JBOSS_HOME}* )
+fi
+
+#A directory inside JBoss where important files will go.
+export JBOSS_DEPLOY_DIR="${JBOSS_HOME}/standalone/deployments"
+
+
+
+
+#ITL server address for the MSSQL server
+#MUST CHANGE THIS OR IT WILL NOT WORK!
+export I2B2_DB_SERVER=[MSSQL Server (ie. sql01.mydomain.edu)]
+
+#ITL default username and password for the MSSQL server
+#This value can be used if a single SQL account is
+# used to connect to the i2b2 database(s)
+# or it can be overridden below if different accounts are used for various cells
+# NOTE: this account should already exist on the SQL Server
+# and have permission to access the database(s) used for i2b2 and shrine
+export I2B2_DB_USER=i2b2_dbo
+export I2B2_DB_PASSWORD=demouser
+export I2B2_DB_SCHEMA=dbo
+
+
+#Postgres role for the i2b2 PM cell
+export I2B2_DB_PM_SERVER=${I2B2_DB_SERVER}
+export I2B2_DB_PM_USER=i2b2pm
+export I2B2_DB_PM_PASSWORD=${I2B2_DB_PASSWORD}
+export I2B2_DB_PM_DATABASE=i2b2pm
+export I2B2_DB_PM_JDBC_URL=jdbc:sqlserver://${I2B2_DB_PM_SERVER}:1433;databaseName=${I2B2_DB_PM_DATABASE}
+
+
+#ITL Configuration for the i2b2 Hive
+#ITL server address for the MSSQL server
+export I2B2_DB_HIVE_SERVER=${I2B2_DB_SERVER}
+export I2B2_DB_HIVE_USER=i2b2hive
+export I2B2_DB_HIVE_PASSWORD=${I2B2_DB_PASSWORD}
+export I2B2_DB_HIVE_DATABASE=i2b2hive
+
+#ITL modified to use MSSQL connection string
+export I2B2_DB_HIVE_JDBC_URL=jdbc:sqlserver://${I2B2_DB_HIVE_SERVER}:1433;databaseName=${I2B2_DB_HIVE_DATABASE}
+
+#Java DataSource name used by the i2b2 hive
+export I2B2_DB_HIVE_DATASOURCE_NAME=OntologyBootStrapDS
+
+
+#ITL Configuration for the i2b2 ontology cell
+export I2B2_DB_ONT_SERVER=${I2B2_DB_SERVER}
+export I2B2_DB_ONT_USER=i2b2metadata
+export I2B2_DB_ONT_PASSWORD=${I2B2_DB_PASSWORD}
+export I2B2_DB_ONT_DATABASE=i2b2metadata
+
+export I2B2_DB_ONT_JDBC_URL=jdbc:sqlserver://${I2B2_DB_ONT_SERVER}:1433;databaseName=${I2B2_DB_ONT_DATABASE}
+
+#Java DataSource name used by the i2b2 ontology cell
+export I2B2_DB_ONT_DATASOURCE_NAME=OntologyDemoDS
+
+#ITL Configuration for the Shrine ontology cell
+#NOTE: defaults to the same connection information as the i2b2 ONT cel
+export I2B2_DB_SHRINE_ONT_SERVER=${I2B2_DB_ONT_SERVER}
+export I2B2_DB_SHRINE_ONT_USER=${I2B2_DB_ONT_USER}
+export I2B2_DB_SHRINE_ONT_PASSWORD=${I2B2_DB_ONT_PASSWORD}
+export I2B2_DB_SHRINE_ONT_DATABASE=${I2B2_DB_ONT_DATABASE}
+export I2B2_DB_SHRINE_ONT_JDBC_URL=jdbc:sqlserver://${I2B2_DB_SERVER}:1433;databaseName=${I2B2_DB_SHRINE_ONT_DATABASE}
+
+#Java DataSource name used by the Shrine ontology cell
+export I2B2_DB_SHRINE_ONT_DATASOURCE_NAME=OntologyShrineDS
+
+
+#ITL Configuration for the i2b2 CRC cell
+export I2B2_DB_CRC_SERVER=${I2B2_DB_SERVER}
+export I2B2_DB_CRC_USER=i2b2demodata
+export I2B2_DB_CRC_PASSWORD=${I2B2_DB_PASSWORD}
+export I2B2_DB_CRC_DATABASE=i2b2demodata
+export I2B2_DB_CRC_JDBC_URL=jdbc:sqlserver://${I2B2_DB_CRC_SERVER}:1433;databaseName=${I2B2_DB_CRC_DATABASE}
+
+#Java DataSource name used by the i2b2 CRC cell
+export I2B2_DB_CRC_DATASOURCE_NAME=QueryToolDemoDS
+
+
+#ITL Configuration for the i2b2 IM cell
+export I2B2_DB_IM_SERVER=${I2B2_DB_SERVER}
+export I2B2_DB_IM_USER=i2b2imdata
+export I2B2_DB_IM_PASSWORD=${I2B2_DB_PASSWORD}
+export I2B2_DB_IM_DATABASE=i2b2imdata
+export I2B2_DB_IM_JDBC_URL=jdbc:sqlserver://${I2B2_DB_IM_SERVER}:1433;databaseName=${I2B2_DB_IM_DATABASE}
+
+
+
+#ITL Configuration for the i2b2 WORK cell
+export I2B2_DB_WORK_SERVER=${I2B2_DB_SERVER}
+export I2B2_DB_WORK_USER=i2b2workdata
+export I2B2_DB_WORK_PASSWORD=${I2B2_DB_PASSWORD}
+export I2B2_DB_WORK_DATABASE=i2b2workdata
+export I2B2_DB_WORK_JDBC_URL=jdbc:sqlserver://${I2B2_DB_WORK_SERVER}:1433;databaseName=${I2B2_DB_WORK_DATABASE}
+
+
+
+
+
+
+#END THINGS THAT WILL NEED TO CHANGE

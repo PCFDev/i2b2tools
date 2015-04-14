@@ -1,0 +1,92 @@
+#!/bin/bash
+
+#########
+# I2B2 Environment variables
+#
+# You can install by setting the i2b2 IP address and then using defaults.
+# You MUST change the default passwords for production operation.
+#
+# To include this script for your logon, you can add a line to your bash profile like this
+# vi ~/.bashrc
+#########
+
+COMMON_RC_FILE=common.rc
+
+if [ -f ~/${COMMON_RC_FILE} ] ; then
+  source ~/${COMMON_RC_FILE}
+elif [ -f ../../${COMMON_RC_FILE} ] ; then
+  source ../../${COMMON_RC_FILE}
+else
+  echo "Either ~/${COMMON_RC_FILE} or ../../${COMMON_RC_FILE} must be present" ; exit -1
+fi
+
+# at-a-glance way to check whether we're using Oracle or Postgres
+export I2B2_RDBMS=oracle
+
+#
+#WILL NEED TO CHANGE IF NOT IN I2B2 VM
+
+#The i2b2 user Shrine should log in as.
+export SHRINE_USER=shrine
+
+#The plaintext password for the i2b2 user Shrine should log in as.
+export SHRINE_OBFUSCATED_WEBCLIENT_PASSWORD=demouser
+
+#SHRINE_OBFUSCATED_WEBCLIENT_PASSWORD hashed with i2b2's password-hashing algorithm
+if [ -f ../I2b2PasswordCryptor.java ] ; then
+  export SHRINE_PASSWORD_CRYPTED=`javac ../I2b2PasswordCryptor.java && java -classpath ../ I2b2PasswordCryptor ${SHRINE_OBFUSCATED_WEBCLIENT_PASSWORD}`
+fi
+
+#The directory containing the JBoss application server that i2b2 runs in.
+export JBOSS_HOME=/opt/jboss
+if [ ! -d $JBOSS_HOME ] ; then
+  # try alternative versioned JBoss directory (used by newer VM images)
+  export JBOSS_HOME=( ${JBOSS_HOME}* )
+fi
+
+#A directory inside JBoss where important files will go.
+export JBOSS_DEPLOY_DIR="${JBOSS_HOME}/standalone/deployments"
+
+#Oracle SID that i2b2 will use
+export I2B2_ORACLE_SID=xe #will need to change if not in i2b2 VM
+
+#Password for the Oracle system user
+export I2B2_ORACLE_SYSTEM_PASSWORD=demouser
+
+#Directory containing the Oracle installation
+export ORACLE_HOME=/usr/lib/oracle/xe/app/oracle/product/10.2.0/server
+
+#Put Oracle on the path; sqlplus is requred.
+export PATH=$PATH:${ORACLE_HOME}/bin
+
+#Oracle user for the i2b2 PM cell
+export I2B2_DB_PM_USER=i2b2pm
+export I2B2_DB_PM_PASSWORD=demouser
+
+#Oracle user for the i2b2 Hive
+export I2B2_DB_HIVE_USER=i2b2hive
+export I2B2_DB_HIVE_PASSWORD=demouser 
+export I2B2_DB_HIVE_JDBC_URL=jdbc:oracle:thin:@localhost:1521:${I2B2_ORACLE_SID}
+#Java DataSource name used by the i2b2 hive
+export I2B2_DB_HIVE_DATASOURCE_NAME=OntologyBootStrapDS
+
+#Oracle user for the i2b2 ontology cell
+export I2B2_DB_ONT_USER=i2b2metadata
+export I2B2_DB_ONT_PASSWORD=demouser
+export I2B2_DB_ONT_JDBC_URL=jdbc:oracle:thin:@localhost:1521:${I2B2_ORACLE_SID}
+#Java DataSource name used by the i2b2 ontology cell
+export I2B2_DB_ONT_DATASOURCE_NAME=OntologyDemoDS
+
+#Oracle user for the Shrine ontology cell
+export I2B2_DB_SHRINE_ONT_USER=shrine_ont
+export I2B2_DB_SHRINE_ONT_PASSWORD=demouser
+export I2B2_DB_SHRINE_ONT_JDBC_URL=jdbc:oracle:thin:@localhost:1521:${I2B2_ORACLE_SID}
+#Java DataSource name used by the Shrine ontology cell
+export I2B2_DB_SHRINE_ONT_DATASOURCE_NAME=OntologyShrineDS
+
+#Oracle user for the i2b2 CRC cell
+export I2B2_DB_CRC_USER=i2b2demodata
+#Java DataSource name used by the i2b2 CRC cell
+export I2B2_DB_CRC_DATASOURCE_NAME=QueryToolDemoDS
+
+#END THINGS THAT WILL NEED TO CHANGE

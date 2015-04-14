@@ -1,0 +1,89 @@
+#!/bin/bash
+
+#########
+# SHRINE Environment variables
+#
+# You can install by setting the i2b2 IP address and then using defaults.
+# You MUST change the default passwords for production operation.
+#
+# To include this script for your logon, you can add a line to your bash profile like this
+# vi ~/.bashrc
+# source shrine.rc
+#########
+
+COMMON_RC_FILE=common.rc
+
+if [ -f ~/${COMMON_RC_FILE} ] ; then
+  source ~/${COMMON_RC_FILE}
+elif [ -f ../${COMMON_RC_FILE} ] ; then
+  source ../${COMMON_RC_FILE}
+else
+  echo "Either ~/${COMMON_RC_FILE} or ../${COMMON_RC_FILE} must be present" ; exit -1
+fi
+
+# REQUIRED
+## This installer requires you have an I2B2 installation.
+
+#Shrine, including the Tomcat application server that Shrine runs in, will be installed here.
+export SHRINE_HOME=/opt/shrine
+
+#The directory containing the Tomcat application server that Shrine runs in.
+export SHRINE_TOMCAT_HOME=${SHRINE_HOME}/tomcat
+
+#A directory on Tomcat'sclasspath, from which shrine.conf will be loaded 
+export SHRINE_TOMCAT_LIB=${SHRINE_TOMCAT_HOME}/lib
+
+#The primary Shrine config file
+export SHRINE_CONF_FILE=${SHRINE_TOMCAT_LIB}/shrine.conf
+
+#Tomcat's main configuration file.
+export SHRINE_TOMCAT_SERVER_CONF=${SHRINE_TOMCAT_HOME}/conf/server.xml
+
+#The location of the Shrine web app's context configuration file.
+export SHRINE_TOMCAT_APP_CONF=${SHRINE_TOMCAT_HOME}/conf/Catalina/localhost/shrine.xml
+
+#The human-readable name of the Shrine node being installed.  This string will appear in the web UI as a label on a source of query results.
+export SHRINE_NODE_NAME="Harvard Affiliated Teaching Hospital"
+
+#The cryptographic keystore file used by Shrine.
+export KEYSTORE_FILE=${SHRINE_HOME}/shrine.keystore
+
+#Default password for the keystore
+export KEYSTORE_PASSWORD="changeit"
+
+#Human-readable name for the cryptographic certificate generated for this Shrine node.
+export KEYSTORE_ALIAS=$SHRINE_IP
+
+#Human-readable name for the cryptographic certificate generated for this Shrine node.
+export KEYSTORE_HUMAN=${SHRINE_NODE_NAME}
+
+#City where the node resides; will be included in generated cryptographic certificate.
+export KEYSTORE_CITY="Boston"
+
+#State where the node resides; will be included in generated cryptographic certificate.
+export KEYSTORE_STATE="MA"
+
+#Country where the node resides; will be included in generated cryptographic certificate.
+export KEYSTORE_COUNTRY="US"
+
+#The host at which MySQL is accessible.  MySQL is needed by Shrine for logging purposes.
+export SHRINE_MYSQL_HOST=localhost
+
+#The MySQL user Shrine should log in as.
+export SHRINE_MYSQL_USER=shrine
+
+#The password for the MySQL user that Shrine should log in as.
+export SHRINE_MYSQL_PASSWORD=demouser
+
+#The i2b2 user Shrine should use when making queries to an i2b2 hive.
+export SHRINE_ADAPTER_I2B2_USER=demo
+
+#The password for the i2b2 user Shrine should use when making queries to an i2b2 hive.
+export SHRINE_ADAPTER_I2B2_PASSWORD=demouser
+
+#The i2b2 project Shrine should use when making queries to an i2b2 hive.
+export SHRINE_ADAPTER_I2B2_PROJECT=Demo
+
+#The i2b2 domain Shrine should use when making queries to an i2b2 hive.
+#NB: This needs to match I2B2_DOMAIN_ID:(
+export SHRINE_ADAPTER_I2B2_DOMAIN=i2b2demo
