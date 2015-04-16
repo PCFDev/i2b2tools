@@ -9,7 +9,7 @@ if ($java -ne $null)
         #write-host $app.LocalPackage
         #write-host $app.IdentifyingNumber
    
-        &cmd /c "msiexec /uninstall $($app.IdentifyingNumber) /quiet"
+        &cmd /c "msiexec /uninstall $($app.IdentifyingNumber) /quiet /norestart"
     }
 }
 else { Write-Host "java not installed..." }
@@ -20,20 +20,22 @@ if(Test-Path "c:\opt\ant"){
 	Remove-Item  "c:\opt\ant" -recurse -force
 }  
 
-if(Test-Path "c:\opt\jboss"){
-    write-host "Removing JBOSS..."
-	Remove-Item  "c:\opt\jboss" -recurse -force
-}  
+ 
 
- &$env:JBOSS_HOME\bin\service.bat stop
- &$env:JBOSS_HOME\bin\service.bat uninstall
+&$env:JBOSS_HOME\bin\service.bat stop
+&$env:JBOSS_HOME\bin\service.bat uninstall
 
-Remove-Item C:\opt\jboss\licenses -force
-Remove-Item C:\opt\jboss\bin\native -force
+Remove-Item C:\opt\jboss\licenses -recurse -force
+Remove-Item C:\opt\jboss\bin\native -recurse -force
 Remove-Item C:\opt\jboss\bin\*.exe -force
 Remove-Item C:\opt\jboss\bin\service.bat -force
 Remove-Item C:\opt\jboss\bin\README-service.txt -force
 
+
+if(Test-Path "c:\opt\jboss"){
+    write-host "Removing JBOSS..."
+	Remove-Item  "c:\opt\jboss" -recurse -force
+} 
 
 echo "Cleaning up path"
 $cleanPath = $env:Path.Replace("$env:JAVA_HOME\bin", "")

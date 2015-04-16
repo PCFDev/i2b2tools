@@ -136,14 +136,14 @@ function removeTempFolder{
   
 
     if(Test-Path $__tempFolder){
-	    Remove-Item $__tempFolder -recurse
+	    Remove-Item $__tempFolder -recurse -force
     }   
 }
 
 function createTempFolder{
     
   
-    removeTempFolder
+    #removeTempFolder
 
     New-Item $__tempFolder -Type directory -Force > $null
 
@@ -158,10 +158,10 @@ function unzip($zipFile, $folderPath, $removeFolder = $false) {
         if($removeFolder -eq $true){
 
             if(Test-Path $folderPath){
-	            Remove-Item $folderPath -recurse
+	            Remove-Item $folderPath -recurse -force > $null
             }
     
-            New-Item $folderPath -Type directory -Force
+            New-Item $folderPath -Type directory -Force > $null
         }
     }
     catch {
@@ -171,45 +171,6 @@ function unzip($zipFile, $folderPath, $removeFolder = $false) {
     [System.IO.Compression.ZipFile]::ExtractToDirectory($zipFile, $folderPath)
 
 }
-
-
-function appendToPath_old($pathToAppend){
-
-    #verify that the current path ends with ; or append it to the start of the pathToAppend
-    if(![System.Environment]::GetEnvironmentVariable("PATH").EndsWith(";")){
-        $pathToAppend = ";" + $pathToAppend
-    }
-
-
-    echo $pathToAppend
-
-    setEnvironmentVariable "PATH" $env:PATH + $pathToAppend
-
-    [System.Environment]::SetEnvironmentVariable("PATH", $env:PATH + $pathToAppend, "Machine")
-
-
-    #Refresh env
-    foreach($level in "Machine","User") {
-
-        [Environment]::GetEnvironmentVariables($level).GetEnumerator() | % {
-        
-            # For Path variables, append the new values, if they're not already in there
-            if($_.Name -match 'Path$') { 
-                $_.Value = ($((Get-Content "Env:$($_.Name)") + ";$($_.Value)") -split ';' | Select -unique) -join ';'
-            }
-
-            $_
-
-        } | Set-Content -Path { "Env:$($_.Name)" }
-
-
-    }
-
-   echo "Path Set" 
-   [System.Environment]::GetEnvironmentVariable("PATH")
-
-}
-
 
 
 
@@ -230,4 +191,16 @@ function interpolate_file($InputFile, $Pattern, $Replacement){
 
     echo $replaced
 
+}
+
+function escape([string] $value){
+    echo $value.Replace('\', '\\')
+}
+
+
+function hash([string] $value){    
+    $md5 = new-object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
+    $utf8 = new-object -TypeName System.Text.UTF8Encoding
+    $hash = [System.BitConverter]::ToString($md5.ComputeHash($utf8.GetBytes($value))).ToLower().Replace('-', '')
+    echo $hash
 }

@@ -3,10 +3,12 @@ Write-Host loading configuration
 ##############################
 #DO NOT EDIT: SYSTEM VARIABLES
 ##############################
+$OutputEncoding=[System.Text.UTF8Encoding]::UTF8
 
 $__rootFolder = "c:\opt"
 
 $__currentDirectory = (Get-Item -Path ".\" -Verbose).FullName
+$__skelDirectory = $__currentDirectory + "\skel"
 $__tempFolder = $__currentDirectory + "\.temp"
 
 $__sourceCodeZipFile = $__currentDirectory + "\i2b2core-src-1704.zip"
@@ -14,11 +16,7 @@ $__sourceCodeRootFolder = $__tempFolder + "\i2b2core-src"
 
 $__jbossFolderName = "jboss-as-7.1.1.Final"
 $__jbossDownloadUrl = "http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip"
-#$__jbossServiceDownloadUrl = "http://www.jboss.org/jbossweb/downloads/jboss-native-2-0-10/"
-
 $__jbossServiceDownloadUrl = "http://downloads.jboss.org/jbossnative/2.0.10.GA/"
-#http://downloads.jboss.org/jbossnative//2.0.10.GA/jboss-native-2.0.10-windows-x64-ssl.zip
-#http://downloads.jboss.org/jbossnative//2.0.10.GA/jboss-native-2.0.10-windows-x86-ssl.zip
 
 if([Environment]::Is64BitOperatingSystem -eq $true){
     $__jbossServiceDownloadUrl = $__jbossServiceDownloadUrl + "jboss-native-2.0.10-windows-x64-ssl.zip"
@@ -57,6 +55,7 @@ if([Environment]::Is64BitOperatingSystem -eq "True")
 export JAVA_HOME="c:\opt\java"
 export ANT_HOME="c:\opt\ant"
 export JBOSS_HOME="c:\opt\jboss"
+export NOPAUSE=1
 
 ##############################
 #END SYSTEM VARIABLES
