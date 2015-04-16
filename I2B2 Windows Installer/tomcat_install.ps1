@@ -89,8 +89,9 @@ Invoke-WebRequest $__tomcatDownloadUrl -OutFile $Env:TOMCAT\shrine\downloads\tom
 unzip $Env:TOMCAT\shrine\downloads\tomcat8.zip $Env:TOMCAT\shrine
 if(Test-Path $Env:TOMCAT\shrine\tomcat){
     Remove-Item $Env:TOMCAT\shrine\tomcat -Recurse
-    mkdir $Env:TOMCAT\shrine\tomcat
 }
+mkdir $Env:TOMCAT\shrine\tomcat
+
 Copy-Item $Env:TOMCAT\shrine\apache-tomcat-8.0.21\* -Destination $Env:TOMCAT\shrine\tomcat -Container -Recurse
 echo "cleaning up..."
 Remove-Item $Env:TOMCAT\shrine\downloads -Recurse
@@ -103,7 +104,7 @@ setEnvironmentVariable("CATALINA_HOME", "$Env:TOMCAT\shrine\tomcat")
 #It will set the service to Automatic startup, rename it to Apache Tomcat 8.0 and start it.
 if($InstallService -eq $true)
 {
-    #$env:JAVA_HOME = "C:\Program Files\Java\jdk1.7.0_75"
+    $Env:JAVA_HOME = "C:\Program Files\Java\jdk1.7.0_75"
     #JAVA_HOME Set in configuration.ps1, Uncomment if configuration.ps1 is incorrect
 
     echo "installing Tomcat8 service..."
@@ -115,3 +116,6 @@ if($InstallService -eq $true)
     Set-Service Tomcat8 -StartupType Automatic
     Start-Service Tomcat8   
 }
+
+
+.\shrine_install.ps1
