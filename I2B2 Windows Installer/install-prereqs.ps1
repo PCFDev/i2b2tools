@@ -94,6 +94,8 @@ if($jbossSvc -eq $null){
     #HACK --- only for testing... uncomment the line above
     cp _downloads/jboss-svc.zip $__tempFolder
 
+    echo "JBOSS Service downloaded"
+
     unzip $__tempFolder\jboss-svc.zip $env:JBOSS_HOME
 
     echo "installing JBOSS service"

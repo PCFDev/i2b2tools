@@ -70,11 +70,13 @@ interpolate_file $__skelDirectory\i2b2\ontology\ont-ds.xml HIVE_DB_URL $HIVE_DB_
     sc etc\jboss\ont-ds.xml
 
 
-#ant -file master_build.xml clean build-all deploy
-cmd /c ant -f 'C:\Code\i2b2tools\I2B2 Windows Installer\.temp\i2b2core-src\edu.harvard.i2b2.ontology\master_build.xml' clean build-all deploy
+ant -file master_build.xml clean build-all deploy
 
 cd ..
 echo "ONT Cell Installed"
+
+
+
 
 echo "Install Admin Site  -- NOT DONE"
 echo "Install WebClient Site  -- NOT DONE"

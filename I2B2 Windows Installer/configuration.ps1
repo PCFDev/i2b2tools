@@ -11,8 +11,8 @@ $__currentDirectory = (Get-Item -Path ".\" -Verbose).FullName
 $__skelDirectory = $__currentDirectory + "\skel"
 $__tempFolder = $__currentDirectory + "\.temp"
 
-$__sourceCodeZipFile = $__currentDirectory + "\i2b2core-src-1704.zip"
-$__sourceCodeRootFolder = $__tempFolder + "\i2b2core-src"
+$__sourceCodeZipFile = $__currentDirectory + "\_downloads\i2b2core-src-1704.zip"
+$__sourceCodeRootFolder = $__rootFolder + "\i2b2"
 
 $__jbossFolderName = "jboss-as-7.1.1.Final"
 $__jbossDownloadUrl = "http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip"

@@ -29,8 +29,8 @@ set SVCDESC=JBoss Application Server 7.1.1 GA/Platform: Windows x64
 set NOPAUSE=Y
 
 REM Suppress killing service on logoff event
-set JAVAOPTS=-Xmx1024M –Xms512M –XX:MaxPermSize=512M -Xrs
 
+set JAVAOPTS=-Xmx1024M –Xms512M –XX:MaxPermSize=512M -Xrs
 REM Figure out the running mode
 
 if /I "%1" == "install"   goto cmdInstall
@@ -73,45 +73,55 @@ goto cmdEnd
 
 :cmdStart
 REM Executed on service start
-del %JBOSS_HOME%\standalone\log\.s.lock 2>&1 | findstr /C:"being used" > nul
+del %JBOSS_HOME%\standalone\log\.r.lock 2>&1 | findstr /C:"being used" > nul
 if not errorlevel 1 (
   echo Could not continue. Locking file already in use.
   goto cmdEnd
 )
-echo Y > %JBOSS_HOME%\standalone\log\.s.lock
+echo Y > %JBOSS_HOME%\standalone\log\.r.lock
 jbosssvc.exe -p 1 "Starting %SVCDISP%" >> %JBOSS_HOME%\standalone\log\service.log
-call standalone.bat --server-config=standalone.xml < %JBOSS_HOME%\standalone\log\.s.lock >> %JBOSS_HOME%\standalone\log\service.log 2>&1
+call standalone.bat --server-config=standalone.xml < %JBOSS_HOME%\standalone\log\.r.lock >> %JBOSS_HOME%\standalone\log\service.log 2>&1
 jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> %JBOSS_HOME%\standalone\log\service.log
-del %JBOSS_HOME%\standalone\log\.s.lock
+del %JBOSS_HOME%\standalone\log\.r.lock
 goto cmdEnd
 
 :cmdStop
 REM Executed on service stop
+
 echo Y > %JBOSS_HOME%\standalone\log\.s.lock
 jbosssvc.exe -p 1 "Shutting down %SVCDISP%" >> %JBOSS_HOME%\standalone\log\service.log
+
 call jboss-cli.bat --connect command=:shutdown < %JBOSS_HOME%\standalone\log\.s.lock >> %JBOSS_HOME%\standalone\log\service.log 2>&1
 jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> %JBOSS_HOME%\standalone\log\service.log
+
 del %JBOSS_HOME%\standalone\log\.s.lock
 goto cmdEnd
 
 :cmdRestart
 REM Executed manually from command line
 REM Note: We can only stop and start
+
 echo Y > %JBOSS_HOME%\standalone\log\.s.lock
 jbosssvc.exe -p 1 "Shutting down %SVCDISP%" >> %JBOSS_HOME%\standalone\log\service.log
+
+
 call jboss-cli.bat --connect command=:shutdown < %JBOSS_HOME%\standalone\log\.s.lock >> %JBOSS_HOME%\standalone\log\service.log 2>&1
 del %JBOSS_HOME%\standalone\log\.s.lock
 :waitRun
 REM Delete lock file
-del %JBOSS_HOME%\standalone\log\.s.lock > nul 2>&1
+
+del %JBOSS_HOME%\standalone\log\.r.lock > nul 2>&1
 REM Wait one second if lock file exist
 jbosssvc.exe -s 1
-if exist "%JBOSS_HOME%\standalone\log\.s.lock" goto waitRun
-echo Y > %JBOSS_HOME%\standalone\log\.s.lock
+if exist "%JBOSS_HOME%\standalone\log\.r.lock" goto waitRun
+
+echo Y > %JBOSS_HOME%\standalone\log\.r.lock
 jbosssvc.exe -p 1 "Restarting %SVCDISP%" >> %JBOSS_HOME%\standalone\log\service.log
-call standalone.bat --server-config=standalone.xml < %JBOSS_HOME%\standalone\log\.s.lock >> %JBOSS_HOME%\standalone\log\service.log 2>&1
+
+call standalone.bat --server-config=standalone.xml < %JBOSS_HOME%\standalone\log\.r.lock >> %JBOSS_HOME%\standalone\log\service.log 2>&1
 jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> %JBOSS_HOME%\standalone\log\service.log
-del %JBOSS_HOME%\standalone\log\.s.lock
+
+del %JBOSS_HOME%\standalone\log\.r.lock
 goto cmdEnd
 
 :cmdSignal

@@ -36,10 +36,10 @@ $__this2 = "IAN"
 $thirdValue = 3
 $now = Get-Date
 
-interpolate_file test_template.txt "THIS_NAME" $__this2 | 
-    interpolate "THAT_NAME" "Josh" |
-    interpolate "NOW" $now |
-    interpolate "THIRD_VALUE" $thirdValue > server.xml
+#interpolate_file test_template.txt "THIS_NAME" $__this2 | 
+#    interpolate "THAT_NAME" "Josh" |
+#    interpolate "NOW" $now |
+#    interpolate "THIRD_VALUE" $thirdValue > server.xml
 
 
 #Start-Process -FilePath "c:\temp\jre-7u17-windows-i586.exe" -ArgumentList '/S /L c:\temp\javainst.log REBOOT=ReallySuppress JAVAUPDATE=0 WEBSTARTICON=0 SYSTRAY=0'
@@ -54,6 +54,8 @@ interpolate_file test_template.txt "THIS_NAME" $__this2 |
 $env:XZY = "bob"
 
 require $env:XZY "XYZ must be set"
+
+printEnvValues
 
 function printEnvValues {
 
