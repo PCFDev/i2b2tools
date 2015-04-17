@@ -11,8 +11,8 @@ REM
 REM ITL Corrections
 REM	Changed service name, display & description
 REM Changed run.bat t0 standalone.bat
-REM Changed shutdown -S to jboss-cli.bat --connect --command=:shutdown
-REM TODO: change log file paths....
+REM Changed shutdown -S to jboss-cli.bat --connect command=:shutdown
+REM Changed JAVAOPTS
 REM
 
 @if not "%ECHO%" == "" echo %ECHO%
@@ -29,8 +29,8 @@ set SVCDESC=JBoss Application Server 7.1.1 GA/Platform: Windows x64
 set NOPAUSE=Y
 
 REM Suppress killing service on logoff event
-set JAVA_OPTS=-Xrs
 
+set JAVAOPTS=-Xmx1024M –Xms512M –XX:MaxPermSize=512M -Xrs
 REM Figure out the running mode
 
 if /I "%1" == "install"   goto cmdInstall
@@ -58,6 +58,8 @@ if errorlevel 6 echo Unknown service mode for %SVCDISP%
 goto cmdEnd
 
 :cmdInstall
+mkdir %JBOSS_HOME%\standalone\log
+echo Service Installed > %JBOSS_HOME%\standalone\log\service.log
 jbosssvc.exe -imwdc %SVCNAME% "%DIRNAME%" "%SVCDISP%" "%SVCDESC%" service.bat
 if not errorlevel 0 goto errExplain
 echo Service %SVCDISP% installed
@@ -71,45 +73,55 @@ goto cmdEnd
 
 :cmdStart
 REM Executed on service start
-del .r.lock 2>&1 | findstr /C:"being used" > nul
+del %JBOSS_HOME%\standalone\log\.r.lock 2>&1 | findstr /C:"being used" > nul
 if not errorlevel 1 (
   echo Could not continue. Locking file already in use.
   goto cmdEnd
 )
-echo Y > .r.lock
-jbosssvc.exe -p 1 "Starting %SVCDISP%" > run.log
-call standalone.bat < .r.lock >> run.log 2>&1
-jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> run.log
-del .r.lock
+echo Y > %JBOSS_HOME%\standalone\log\.r.lock
+jbosssvc.exe -p 1 "Starting %SVCDISP%" >> %JBOSS_HOME%\standalone\log\service.log
+call standalone.bat --server-config=standalone.xml < %JBOSS_HOME%\standalone\log\.r.lock >> %JBOSS_HOME%\standalone\log\service.log 2>&1
+jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> %JBOSS_HOME%\standalone\log\service.log
+del %JBOSS_HOME%\standalone\log\.r.lock
 goto cmdEnd
 
 :cmdStop
 REM Executed on service stop
-echo Y > .s.lock
-jbosssvc.exe -p 1 "Shutting down %SVCDISP%" > shutdown.log
-call jboss-cli.bat --connect --command=:shutdown < .s.lock >> shutdown.log 2>&1
-jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> shutdown.log
-del .s.lock
+
+echo Y > %JBOSS_HOME%\standalone\log\.s.lock
+jbosssvc.exe -p 1 "Shutting down %SVCDISP%" >> %JBOSS_HOME%\standalone\log\service.log
+
+call jboss-cli.bat --connect command=:shutdown < %JBOSS_HOME%\standalone\log\.s.lock >> %JBOSS_HOME%\standalone\log\service.log 2>&1
+jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> %JBOSS_HOME%\standalone\log\service.log
+
+del %JBOSS_HOME%\standalone\log\.s.lock
 goto cmdEnd
 
 :cmdRestart
 REM Executed manually from command line
 REM Note: We can only stop and start
-echo Y > .s.lock
-jbosssvc.exe -p 1 "Shutting down %SVCDISP%" >> shutdown.log
-call jboss-cli.bat --connect --command=:shutdown < .s.lock >> shutdown.log 2>&1
-del .s.lock
+
+echo Y > %JBOSS_HOME%\standalone\log\.s.lock
+jbosssvc.exe -p 1 "Shutting down %SVCDISP%" >> %JBOSS_HOME%\standalone\log\service.log
+
+
+call jboss-cli.bat --connect command=:shutdown < %JBOSS_HOME%\standalone\log\.s.lock >> %JBOSS_HOME%\standalone\log\service.log 2>&1
+del %JBOSS_HOME%\standalone\log\.s.lock
 :waitRun
 REM Delete lock file
-del .r.lock > nul 2>&1
+
+del %JBOSS_HOME%\standalone\log\.r.lock > nul 2>&1
 REM Wait one second if lock file exist
 jbosssvc.exe -s 1
-if exist ".r.lock" goto waitRun
-echo Y > .r.lock
-jbosssvc.exe -p 1 "Restarting %SVCDISP%" >> run.log
-call standalone.bat < .r.lock >> run.log 2>&1
-jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> run.log
-del .r.lock
+if exist "%JBOSS_HOME%\standalone\log\.r.lock" goto waitRun
+
+echo Y > %JBOSS_HOME%\standalone\log\.r.lock
+jbosssvc.exe -p 1 "Restarting %SVCDISP%" >> %JBOSS_HOME%\standalone\log\service.log
+
+call standalone.bat --server-config=standalone.xml < %JBOSS_HOME%\standalone\log\.r.lock >> %JBOSS_HOME%\standalone\log\service.log 2>&1
+jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> %JBOSS_HOME%\standalone\log\service.log
+
+del %JBOSS_HOME%\standalone\log\.r.lock
 goto cmdEnd
 
 :cmdSignal
