@@ -98,7 +98,8 @@ Remove-Item $Env:TOMCAT\shrine\downloads -Recurse
 Remove-Item $Env:TOMCAT\shrine\apache-tomcat-8.0.21 -Recurse
 
 #This environment variable is required for Tomcat to run and to install as a service
-setEnvironmentVariable("CATALINA_HOME", "$Env:TOMCAT\shrine\tomcat")
+setEnvironmentVariable "CATALINA_HOME" "$Env:TOMCAT\shrine\tomcat"
+
 
 #If $InstallService is $true (as default), this will install the Tomcat Windows Service.
 #It will set the service to Automatic startup, rename it to Apache Tomcat 8.0 and start it.
