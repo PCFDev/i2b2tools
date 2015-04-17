@@ -79,15 +79,20 @@ function removeAnt {
  function removePHP{
     if(Test-Path "c:\php"){
         echo "Removing PHP"
+        exec iisreset '/stop'
         Remove-Item  "c:\php" -recurse -force
+        removeFromPath "c:\php"
+        exec iisreset '/start'
+
     }
  }
+
 
  #removeAnt
  #removeJBOSS
  #removeJava
-
- removeIIS
- removePHP
+ 
+ #removePHP
+ #removeIIS
 
 echo "done."

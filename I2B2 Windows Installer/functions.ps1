@@ -11,7 +11,7 @@ function exec{
 	    [string]$args = ""
     )
 
-    write-host "Running " $path
+    write-host "Running " $path $args
 
     $pinfo = New-Object System.Diagnostics.ProcessStartInfo
     $pinfo.FileName = $path
@@ -203,4 +203,31 @@ function hash([string] $value){
     $utf8 = new-object -TypeName System.Text.UTF8Encoding
     $hash = [System.BitConverter]::ToString($md5.ComputeHash($utf8.GetBytes($value))).ToLower().Replace('-', '')
     echo $hash
+}
+
+
+function formatElapsedTime($ts) 
+{
+    $elapsedTime = ""
+
+    if ( $ts.Minutes -gt 0 )
+    {
+        $elapsedTime = [string]::Format( "{0:00} min. {1:00}.{2:00} sec.", $ts.Minutes, $ts.Seconds, $ts.Milliseconds / 10 );
+    }
+    else
+    {
+        $elapsedTime = [string]::Format( "{0:00}.{1:00} sec.", $ts.Seconds, $ts.Milliseconds / 10 );
+    }
+
+    if ($ts.Hours -eq 0 -and $ts.Minutes -eq 0 -and $ts.Seconds -eq 0)
+    {
+        $elapsedTime = [string]::Format("{0:00} ms.", $ts.Milliseconds);
+    }
+
+    if ($ts.Milliseconds -eq 0)
+    {
+        $elapsedTime = [string]::Format("{0} ms", $ts.TotalMilliseconds);
+    }
+
+    return $elapsedTime
 }

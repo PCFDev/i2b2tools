@@ -1,4 +1,6 @@
-﻿. .\functions.ps1
+﻿ $sw = [Diagnostics.Stopwatch]::StartNew()
+
+. .\functions.ps1
 . .\configuration.ps1
 
 
@@ -55,7 +57,6 @@ $env:XZY = "bob"
 
 require $env:XZY "XYZ must be set"
 
-printEnvValues
 
 function printEnvValues {
 
@@ -69,6 +70,7 @@ function printEnvValues {
 
 }
 
+printEnvValues
 
 
 $someString = "bob2:ManagementRealm:test"
@@ -76,3 +78,11 @@ $md5 = new-object -TypeName System.Security.Cryptography.MD5CryptoServiceProvide
 $utf8 = new-object -TypeName System.Text.UTF8Encoding
 $hash = [System.BitConverter]::ToString($md5.ComputeHash($utf8.GetBytes($someString))).ToLower().Replace('-', '')
 echo $hash
+
+$sw.Stop()
+
+$sw.Elapsed
+
+
+
+formatElapsedTime $sw.Elapsed

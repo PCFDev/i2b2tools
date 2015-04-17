@@ -14,6 +14,9 @@ $__tempFolder = $__currentDirectory + "\.temp"
 $__sourceCodeZipFile = $__currentDirectory + "\_downloads\i2b2core-src-1704.zip"
 $__sourceCodeRootFolder = $__rootFolder + "\i2b2"
 
+$__webclientZipFile = $__currentDirectory + "\_downloads\i2b2webclient-1704.zip"
+$__webclientInstallFolder = "c:\inetpub\wwwroot"
+
 $__jbossFolderName = "jboss-as-7.1.1.Final"
 $__jbossDownloadUrl = "http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip"
 $__jbossServiceDownloadUrl = "http://downloads.jboss.org/jbossnative/2.0.10.GA/"
@@ -38,6 +41,10 @@ if([Environment]::Is64BitOperatingSystem -eq $true){
 }
 
 $__axisDownloadUrl = "https://www.i2b2.org/software/projects/installer/axis2-1.6.2-war.zip"
+
+$__phpDownloadUrl = "http://windows.php.net/downloads/releases/php-5.5.24-nts-Win32-VC11-x86.zip"
+$__phpInstallDirectory = "C:\php"
+$__vcRedistDownloadUrl = "http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe"
 
 
 if([Environment]::Is64BitOperatingSystem -eq "True")

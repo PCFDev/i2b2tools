@@ -135,7 +135,6 @@ function installCRC {
 
 }
 
-
 function installWorkplace {
 
     echo "Installing Workplace Cell"
@@ -168,8 +167,6 @@ function installWorkplace {
     cd ..
     echo "Workplace Cell Installed"
 }
-
-
 
 function installFR {
 
@@ -221,18 +218,34 @@ function installIM {
     echo "IM Cell Installed"
 }
 
+function installWebClient{
+    echo "Installing i2b2 webclient..."
+    unzip $__webclientZipFile $__webclientInstallFolder
+    echo "Web Client installed to $__webclientInstallFolder"
+
+    if(!(Test-Path $__webclientInstallFolder))
+    {
+        Throw "Source not extracted"
+    }
+
+}
+
+function installAdminTool{
+    echo "Installing i2b2 admin tool..."
+    cp  $__sourceCodeRootFolder\admin $__webClientInstallFolder -Force -Recurse
+    echo "i2b2 admin tool installed"
+}
 
 
-installServerCommon
-installPM
-installONT
-installCRC
-installWorkplace
-installFR
-installIM
+#installServerCommon
+#installPM
+#installONT
+#installCRC
+#installWorkplace
+#installFR
+#installIM
 
-
-echo "Install Admin Site  -- NOT DONE"
-echo "Install WebClient Site  -- NOT DONE"
+installWebClient
+installAdminTool
 
 cd $__currentDirectory

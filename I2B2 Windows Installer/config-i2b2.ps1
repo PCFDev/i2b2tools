@@ -1,4 +1,9 @@
-﻿#Location of the i2b2 web services
+﻿$JBOSS_ADDRESS = "0.0.0.0"
+$JBOSS_PORT = "9090"
+$JBOSS_ADMIN = "jbossAdmin"
+$JBOSS_PASS = "jbossP@ss"
+
+#Location of the i2b2 web services
 $DEFAULT_I2B2_SERVICE_URL="http://localhost:9090/i2b2/services"
 $PM_SERVICE_URL="$DEFAULT_I2B2_SERVICE_URL/PMService/getServices"
 $CRC_SERVICE_URL="$DEFAULT_I2B2_SERVICE_URL/QueryToolService"
