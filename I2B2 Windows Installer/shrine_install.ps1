@@ -30,7 +30,7 @@ Invoke-WebRequest $ShrineProxyURL  -OutFile $_SHRINE_SETUP\shrine-proxy.war
 
 echo "downloading shrine-webclient to tomcat"
 #run to copy shrine-webclient to webapps folder in tomcat
-& "$_SHRINE_SETUP\svn\svn-win32-1.8.11\bin\svn.exe" checkout $_SHRINE_SVN_URL_BASE/code/shrine-webclient/  $_SHRINE_SETUP\shrine-webclient
+& "$_SHRINE_SETUP\svn\svn-win32-1.8.11\bin\svn.exe" checkout $_SHRINE_SVN_URL_BASE/code/shrine-webclient/  $_SHRINE_SETUP\shrine-webclient > $null
 
 $ShrineAdapterMappingsURL = "$_SHRINE_SVN_URL_BASE/ontology/SHRINE_Demo_Downloads/AdapterMappings_i2b2_DemoData.xml"
 
@@ -69,7 +69,7 @@ interpolate_file .\shrine\skel\shrine.conf "I2B2_PM_IP" $_I2B2_PM_IP | interpola
     interpolate "SHRINE_ADAPTER_I2B2_PASSWORD" $_SHRINE_ADAPTER_I2B2_PASSWORD |
     interpolate "SHRINE_ADAPTER_I2B2_PROJECT" $_SHRINE_ADAPTER_I2B2_PROJECT |
     interpolate "I2B2_CRC_IP" $_I2B2_CRC_IP | interpolate "SHRINE_NODE_NAME" $_SHRINE_NODE_NAME |
-    interpolate "KEYSTORE_FILE" $_KEYSTORE_FILE | interpolate "KEYSTORE_PASSWORD" $_KEYSTORE_PASSWORD |
+    interpolate "KEYSTORE_FILE" (escape $_KEYSTORE_FILE) | interpolate "KEYSTORE_PASSWORD" $_KEYSTORE_PASSWORD |
     interpolate "KEYSTORE_ALIAS" $_KEYSTORE_ALIAS > $_SHRINE_SETUP\ready\shrine.conf
 
 #Copy relevant files to proper locations
@@ -87,6 +87,7 @@ Copy-Item .\shrine\skel\sqljdbc4.jar $_SHRINE_TOMCAT_LIB\sqljdbc4.jar
 
 
 #Remove Shrine Setup Directory
-Remove-Item $_SHRINE_HOME\setup\* -Recurse -Force
+#Remove-Item $_SHRINE_HOME\setup\* -Recurse -Force
+Remove-Item $_SHRINE_HOME\setup -Recurse -Force
 
 Restart-Service Tomcat8
