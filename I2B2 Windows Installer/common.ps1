@@ -24,7 +24,7 @@ $_SHRINE_SSL_PORT = "6443"
 
 
 #Shrine, including the Tomcat application server that Shrine runs in, will be installed here.
-$_SHRINE_HOME = (Get-Item $env:CATALINA_HOME).Parent.FullName
+$_SHRINE_HOME = "C:\opt\shrine"
 
 #The directory containing the Tomcat application server that Shrine runs in.
 $_SHRINE_TOMCAT_HOME = "$_SHRINE_HOME\tomcat"

@@ -62,45 +62,13 @@ Param(
 . .\functions.ps1
 . .\configuration.ps1
 . .\common.ps1
-. .\install-prereqs.ps1
 
 
 function prepareInstall(){
 
     echo "Preparing for installation..."
 
-    #Check for Java
-    if((isJavaInstalled) -eq $false)
-    {
-        echo "Java not installed! Installing Java..."
-        InstallJava
-    }
-    echo "Java is installed. Moving on..."
-    
-    echo "installing Subversion"
-    #Download Subversion
-    $SVNUrl = "http://downloads.sourceforge.net/project/win32svn/1.8.11/apache22/svn-win32-1.8.11.zip?"
-    Invoke-WebRequest  $SVNUrl -OutFile $_SHRINE_HOME\setup\subversion.zip -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
-    unzip $_SHRINE_HOME\setup\subversion.zip $_SHRINE_HOME\setup\svn
-    echo "Subversion is installed. Moving on..."
-
-#________________________________________________________________________________________
-
-
-    echo "Setting variable paths..."
-    #If given no argument for install directory, set default directory C:\opt
-    if($tomcat_path -eq "")
-    {
-        $Env:TOMCAT ="C:\opt"
-        echo "install path set to C:\opt"
-    }
-    else
-    {
-        $Env:TOMCAT = $tomcat_path
-        echo "install path set to $Env:TOMCAT"
-    }
-
-#______________________________________________________________________________
+    #______________________________________________________________________________
 
     echo "creating directories..."
     #Create temp downloads folder
@@ -128,6 +96,39 @@ function prepareInstall(){
     }
     echo "Shrine setup locations created."
 
+#_____________________________________________
+
+    #Check for Java
+    if((isJavaInstalled) -eq $false)
+    {
+        throw "Java not installed!"
+        #InstallJava
+    }
+    echo "Java is installed. Moving on..."
+    
+    echo "installing Subversion"
+    #Download Subversion
+    $SVNUrl = "http://downloads.sourceforge.net/project/win32svn/1.8.11/apache22/svn-win32-1.8.11.zip?"
+    Invoke-WebRequest  $SVNUrl -OutFile $_SHRINE_HOME\setup\subversion.zip -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
+    unzip $_SHRINE_HOME\setup\subversion.zip $_SHRINE_HOME\setup\svn
+    echo "Subversion is installed. Moving on..."
+
+#________________________________________________________________________________________
+
+
+    echo "Setting variable paths..."
+    #If given no argument for install directory, set default directory C:\opt
+    if($tomcat_path -eq "")
+    {
+        $Env:TOMCAT ="C:\opt"
+        echo "install path set to C:\opt"
+    }
+    else
+    {
+        $Env:TOMCAT = $tomcat_path
+        echo "install path set to $Env:TOMCAT"
+    }
+
 
     echo "Finished preparing."
 }
@@ -152,7 +153,6 @@ function installTomcatService{
     Start-Service Tomcat8   
 
     echo "Tomcat8 service set to Automatic and running!"
-    }
 }
 
 function uninstallTomcatService{
@@ -199,7 +199,7 @@ function installTomcat{
 
 function installShrine{
 
-    echo "Beginning Shrine instal..."
+    echo "Beginning Shrine install..."
 
     #This is where shrine install starts right now
     $ShrineQuickInstallUrl = "$_SHRINE_SVN_URL_BASE/code/install/i2b2-1.7/"
@@ -222,7 +222,7 @@ function installShrine{
     echo "downloading shrine-webclient to tomcat..."
     
     #run to copy shrine-webclient to webapps folder in tomcat
-    & "$_SHRINE_HOME\setup\svn\svn-win32-1.8.11\bin\svn.exe" checkout $_SHRINE_SVN_URL_BASE/code/shrine-webclient/  $_SHRINE_HOME\setup\shrine-webclient
+    & "$_SHRINE_HOME\setup\svn\svn-win32-1.8.11\bin\svn.exe" checkout $_SHRINE_SVN_URL_BASE/code/shrine-webclient/  $_SHRINE_HOME\setup\shrine-webclient > $null
 
     echo "shrine-webclient downloaded."
 
@@ -300,6 +300,7 @@ function installShrine{
     }
 
 $__timer = [Diagnostics.Stopwatch]::StartNew()
+
 prepareInstall
 installTomcat
 installTomcatService
