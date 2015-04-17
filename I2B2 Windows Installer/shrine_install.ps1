@@ -30,7 +30,7 @@ Invoke-WebRequest $ShrineProxyURL  -OutFile $_SHRINE_SETUP\shrine-proxy.war
 
 echo "downloading shrine-webclient to tomcat"
 #run to copy shrine-webclient to webapps folder in tomcat
-& "$_SHRINE_SETUP\svn\svn-win32-1.8.11\bin\svn.exe" checkout $_SHRINE_SVN_URL_BASE/code/shrine-webclient/  $_SHRINE_SETUP\shrine-webclient > $null
+& "$_SHRINE_SETUP\svn\svn-win32-1.8.11\bin\svn.exe" checkout $_SHRINE_SVN_URL_BASE/code/shrine-webclient/  $_SHRINE_SETUP\shrine-webclient
 
 $ShrineAdapterMappingsURL = "$_SHRINE_SVN_URL_BASE/ontology/SHRINE_Demo_Downloads/AdapterMappings_i2b2_DemoData.xml"
 
@@ -87,7 +87,6 @@ Copy-Item .\shrine\skel\sqljdbc4.jar $_SHRINE_TOMCAT_LIB\sqljdbc4.jar
 
 
 #Remove Shrine Setup Directory
-#Remove-Item $_SHRINE_HOME\setup\* -Recurse -Force
-Remove-Item $_SHRINE_HOME\setup -Recurse -Force
+Remove-Item $_SHRINE_HOME\setup\* -Recurse -Force
 
 Restart-Service Tomcat8
