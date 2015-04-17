@@ -104,7 +104,7 @@ setEnvironmentVariable("CATALINA_HOME", "$Env:TOMCAT\shrine\tomcat")
 #It will set the service to Automatic startup, rename it to Apache Tomcat 8.0 and start it.
 if($InstallService -eq $true)
 {
-    $Env:JAVA_HOME = "C:\Program Files\Java\jdk1.7.0_75"
+    #$Env:JAVA_HOME = "C:\Program Files\Java\jdk1.7.0_75"
     #JAVA_HOME Set in configuration.ps1, Uncomment if configuration.ps1 is incorrect
 
     echo "installing Tomcat8 service..."
