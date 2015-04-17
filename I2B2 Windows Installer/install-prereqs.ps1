@@ -149,6 +149,52 @@ if(!(Test-Path "$env:JBOSS_HOME\standalone\deployments\i2b2.war"))
 
 echo "AXIS War Installed"
 
+function installIIS {
+    echo "Installing IIS"
+    $iis =  Get-WindowsOptionalFeature -FeatureName IIS-WebServerRole -Online
 
-echo "Install IIS --- NOT DONE"
-echo "Install PHP --- NOT DONE"
+    if($iis.State -ne "Enabled"){
+        Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole -NoRestart
+    }
+    echo "IIS Installed"
+}
+
+function installPHP{
+    echo "Installing PHP"
+    $__phpDownloadUrl = "http://windows.php.net/downloads/releases/php-5.5.24-nts-Win32-VC11-x86.zip"
+    $__phpInstallDirectory = "C:\php"
+
+    #Reference: http://php.net/manual/en/install.windows.manual.php
+    #wget $__phpDownloadUrl -OutFile $__tempFolder/php.zip
+    cp .\_downloads\php.zip $__tempFolder\php.zip
+
+    unzip $__tempFolder/php.zip $__phpInstallDirectory
+
+    cp $__phpInstallDirectory\php.ini-production $__phpInstallDirectory\php.ini
+
+
+    #Reference: http://php.net/manual/en/install.windows.iis7.php
+    $cgi =  Get-WindowsOptionalFeature -FeatureName IIS-CGI -Online
+
+    if($cgi.State -ne "Enabled"){
+        Enable-WindowsOptionalFeature -FeatureName IIS-CGI -Online -NoRestart
+    }
+
+    #Creating IIS FastCGI process pool
+    #exec c:\windows\system32\inetsrv\appcmd.exe "set config /section:system.webServer/fastCGI/+[fullPath='$__phpInstallDirectory\php-cgi.exe']"
+
+    #Creating handler mapping for PHP requests
+    #exec c:\windows\system32\inetsrv\appcmd.exe "set config /section:system.webServer/handlers/+[name='PHP_via_FastCGI', path='*.php',verb='*',modules='FastCgiModule',scriptProcessor='$__phpInstallDirectory\php-cgi.exe',resourceType='Either']"
+
+    c:\windows\system32\inetsrv\appcmd.exe set config -section:system.webServer/fastCgi /+"[fullPath='c:\php\php-cgi.exe']" /commit:apphost
+
+    #c:\windows\system32\inetsrv\appcmd.exe set config "Default Web Site" -section:system.webServer/handlers /+"[name='PHP-FastCGI',path='*.php',verb='GET,HEAD,POST',modules='FastCgiModule',scriptProcessor='c:\php\php-cgi.exe',resourceType='Either']"
+    c:\windows\system32\inetsrv\appcmd.exe set config  -section:system.webServer/handlers /+"[name='PHP-FastCGI',path='*.php',verb='GET,HEAD,POST',modules='FastCgiModule',scriptProcessor='c:\php\php-cgi.exe',resourceType='Either']"
+
+    echo "<?php PHPINFO() ?>" | sc C:\inetpub\wwwroot\index.php
+
+    echo "PHP Installed"
+}
+
+#installIIS
+#installPHP

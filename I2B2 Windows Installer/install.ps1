@@ -46,13 +46,12 @@ Param(
 	[bool]$InstallDatabases=$false
 )
 
-
+function echo($value){
+    Write-Host $value
+}
 . .\functions.ps1
 . .\configuration.ps1
 . .\config-i2b2.ps1
-
-
-
 
  if(Test-Path $__rootFolder){
 
@@ -79,10 +78,10 @@ if($InstallDatabases -eq $true){
 }
 
 
-. .\install-i2b2.ps1 
+#. .\install-i2b2.ps1 
 
 
 #clean up after ourself
 #removeTempFolder
 
-net start jboss
+#net start jboss

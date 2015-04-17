@@ -24,7 +24,7 @@ function removeJBOSS {
         Remove-Item C:\opt\jboss\bin\service.bat -force
         Remove-Item C:\opt\jboss\bin\README-service.txt -force
 
-        write-host "Removing JBOSS..."
+        echo "Removing JBOSS..."
 	    Remove-Item  "c:\opt\jboss" -recurse -force
         removeFromPath "$env:JBOSS_HOME\bin"    
         [Environment]::SetEnvironmentVariable("JBOSS_HOME",$null,"Machine")
@@ -66,13 +66,28 @@ function removeAnt {
     }    
 }
  
+ function removeIIS{
+    $iis =  Get-WindowsOptionalFeature -FeatureName IIS-WebServerRole -Online
 
+    if($iis.State -eq "Enabled"){
+        echo "Removing IIS"
+        Disable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole -NoRestart
+    }
+
+ }
+
+ function removePHP{
+    if(Test-Path "c:\php"){
+        echo "Removing PHP"
+        Remove-Item  "c:\php" -recurse -force
+    }
+ }
 
  #removeAnt
- removeJBOSS
+ #removeJBOSS
  #removeJava
 
+ removeIIS
+ removePHP
 
-
-
-Write-Host "done."
+echo "done."

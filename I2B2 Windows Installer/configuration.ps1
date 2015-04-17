@@ -1,4 +1,4 @@
-Write-Host loading configuration
+echo "loading configuration"
 
 ##############################
 #DO NOT EDIT: SYSTEM VARIABLES
