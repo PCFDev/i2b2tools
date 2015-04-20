@@ -1,4 +1,4 @@
-echo "loading configuration"
+echo "Loading system configuration"
 
 ##############################
 #DO NOT EDIT: SYSTEM VARIABLES
@@ -40,7 +40,8 @@ if([Environment]::Is64BitOperatingSystem -eq $true){
 	$__javaDownloadUrl = "https://download.oracle.com/otn-pub/java/jdk/7u75-b13/jdk-7u75-windows-i586.exe"
 }
 
-$__axisDownloadUrl = "https://www.i2b2.org/software/projects/installer/axis2-1.6.2-war.zip"
+$__axisDownloadUrl = "http://mirror.symnds.com/software/Apache/axis/axis2/java/core/1.6.2/axis2-1.6.2-war.zip"
+
 
 $__phpDownloadUrl = "http://windows.php.net/downloads/releases/php-5.5.24-nts-Win32-VC11-x86.zip"
 $__phpInstallDirectory = "C:\php"

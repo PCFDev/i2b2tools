@@ -1,11 +1,16 @@
-﻿$JBOSS_ADDRESS = "0.0.0.0"
+﻿#JBOSS Configuration
+$JBOSS_ADDRESS = "0.0.0.0"
 $JBOSS_PORT = "9090"
 $JBOSS_ADMIN = "jbossAdmin"
 $JBOSS_PASS = "jbossP@ss"
 
+#i2b2 domain config
+$I2B2_DOMAIN="i2b2demo"
+$I2B2_HIVE_NAME="Local Demo"
+
 #Location of the i2b2 web services
 $DEFAULT_I2B2_SERVICE_URL="http://localhost:9090/i2b2/services"
-$PM_SERVICE_URL="$DEFAULT_I2B2_SERVICE_URL/PMService/getServices"
+$PM_SERVICE_URL="$DEFAULT_I2B2_SERVICE_URL/PMService"
 $CRC_SERVICE_URL="$DEFAULT_I2B2_SERVICE_URL/QueryToolService"
 $FR_SERVICE_URL="$DEFAULT_I2B2_SERVICE_URL/FRService"
 $ONT_SERVICE_URL="$DEFAULT_I2B2_SERVICE_URL/OntologyService"
@@ -15,7 +20,7 @@ $I2B2_SERVICEACCOUNT_USER="AGG_SERVICE_ACCOUNT"
 $I2B2_SERVICEACCOUNT_PASS="demouser"
 
 #Database configuration
-$DEFAULT_DB_URL="jdbc:sqlserver://localhost:1433"
+$DEFAULT_DB_URL="jdbc:sqlserver://pcfsqli2b2.pcf.wustl.edu:1433"
 $DEFAULT_DB_DRIVER="com.microsoft.sqlserver.jdbc.SQLServerDriver"
 $DEFAULT_DB_JAR_FILE="sqljdbc4.jar"
 $DEFAULT_DB_TYPE="SQLServer"

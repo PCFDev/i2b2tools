@@ -56,7 +56,7 @@ function installONT{
     interpolate_file $__skelDirectory\i2b2\ontology\ontology_application_directory.properties JBOSS_HOME (escape $env:JBOSS_HOME) | 
         sc etc/spring/ontology_application_directory.properties
 
-    interpolate_file $__skelDirectory\i2b2\ontology\ontology.properties ONT_DB_SCHEMA $ONT_DB_SCHEMA | 
+    interpolate_file $__skelDirectory\i2b2\ontology\ontology.properties HIVE_DB_SCHEMA $HIVE_DB_SCHEMA | 
         interpolate PM_SERVICE_URL $PM_SERVICE_URL |
         interpolate CRC_SERVICE_URL $CRC_SERVICE_URL |
         interpolate FR_SERVICE_URL $FR_SERVICE_URL |
@@ -198,6 +198,7 @@ function installIM {
         sc etc/spring/im_application_directory.properties
 
     interpolate_file $__skelDirectory\i2b2\im\im.properties PM_SERVICE_URL $PM_SERVICE_URL | 
+        interpolate HIVE_DB_SCHEMA $HIVE_DB_SCHEMA |
         sc etc/spring/im.properties
 
     interpolate_file $__skelDirectory\i2b2\im\im-ds.xml HIVE_DB_URL $HIVE_DB_URL | 
@@ -220,31 +221,46 @@ function installIM {
 
 function installWebClient{
     echo "Installing i2b2 webclient..."
-    unzip $__webclientZipFile $__webclientInstallFolder
-    echo "Web Client installed to $__webclientInstallFolder"
+    unzip $__webclientZipFile $__webclientInstallFolder $true
 
+   
     if(!(Test-Path $__webclientInstallFolder))
     {
-        Throw "Source not extracted"
+        Throw "Web client could not be installed"
     }
+
+    interpolate_file $__skelDirectory\i2b2\webclient\i2b2_config_data.js I2B2_DOMAIN $I2B2_DOMAIN | 
+        interpolate I2B2_HIVE_NAME $I2B2_HIVE_NAME |
+        interpolate PM_SERVICE_URL $PM_SERVICE_URL |
+        sc $__webclientInstallFolder\webclient\i2b2_config_data.js
+
+    echo "Web Client installed to $__webclientInstallFolder"
 
 }
 
 function installAdminTool{
     echo "Installing i2b2 admin tool..."
+
     cp  $__sourceCodeRootFolder\admin $__webClientInstallFolder -Force -Recurse
+
+    
+    interpolate_file $__skelDirectory\i2b2\admin\i2b2_config_data.js I2B2_DOMAIN $I2B2_DOMAIN | 
+        interpolate I2B2_HIVE_NAME $I2B2_HIVE_NAME |
+        interpolate PM_SERVICE_URL $PM_SERVICE_URL |
+        sc $__webclientInstallFolder\admin\i2b2_config_data.js
+
+
     echo "i2b2 admin tool installed"
 }
 
 
-#installServerCommon
-#installPM
-#installONT
-#installCRC
-#installWorkplace
-#installFR
-#installIM
-
+installServerCommon
+installPM
+installONT
+installCRC
+installWorkplace
+installFR
+installIM
 installWebClient
 installAdminTool
 

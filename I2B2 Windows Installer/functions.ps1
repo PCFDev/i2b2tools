@@ -1,6 +1,6 @@
 ﻿Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-echo "importing functions"
+echo "Importing functions"
 
 
 function exec{
@@ -40,12 +40,10 @@ function exec{
 
 }
 
-
 function setEnvironmentVariable($name, $value){
     [System.Environment]::SetEnvironmentVariable($name, $value, 'machine')
     [System.Environment]::SetEnvironmentVariable($name, $value, 'process')
 }
-
 
 function export ([string]$variableAndValue){
 <#
@@ -93,7 +91,6 @@ function addToPath($pathToAppend){
 
 }
 
-
 function isAntInstalled {    
     <#    
     .SYNOPSIS Check it see if ant is installed
@@ -109,7 +106,6 @@ function isAntInstalled {
         return $false
     }
 }
-
 
 function isJavaInstalled {    
     <#    
@@ -131,7 +127,6 @@ function isJavaInstalled {
     }
 }
 
-
 function removeTempFolder{
   
 
@@ -149,7 +144,6 @@ function createTempFolder{
 
     write-host "Created " $__tempFolder
 }
-
 
 function unzip($zipFile, $folderPath, $removeFolder = $false) {
 
@@ -172,8 +166,6 @@ function unzip($zipFile, $folderPath, $removeFolder = $false) {
 
 }
 
-
-
 function interpolate($Pattern, $Replacement){
 
     begin {}
@@ -181,7 +173,6 @@ function interpolate($Pattern, $Replacement){
     end {}
 
 }
-
 
 function interpolate_file($InputFile, $Pattern, $Replacement){
    
@@ -197,7 +188,6 @@ function escape([string] $value){
     echo $value.Replace('\', '\\')
 }
 
-
 function hash([string] $value){    
     $md5 = new-object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
     $utf8 = new-object -TypeName System.Text.UTF8Encoding
@@ -205,9 +195,7 @@ function hash([string] $value){
     echo $hash
 }
 
-
-function formatElapsedTime($ts) 
-{
+function formatElapsedTime($ts) {
     $elapsedTime = ""
 
     if ( $ts.Minutes -gt 0 )
