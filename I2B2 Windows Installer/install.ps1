@@ -31,8 +31,6 @@ Skips the installation of the i2b2 Server Requirements and the Data Installation
 .\Install-I2B2 -p $false -d $false
 Skips the installation of the i2b2 Server Requirements and the Data Installation process
 
-
-
 #>
 
 
@@ -41,9 +39,22 @@ Param(
     [parameter(Mandatory=$false)]
 	[alias("p")]
 	[bool]$InstallPrereqs=$true,
+
     [parameter(Mandatory=$false)]
 	[alias("d")]
-	[bool]$InstallDatabases=$false
+	[bool]$InstallDatabases=$false,
+
+    [parameter(Mandatory=$false)]
+	[alias("data")]
+	[bool]$InstallDemoData=$false,
+
+    [parameter(Mandatory=$false)]
+	[alias("c")]
+	[bool]$InstallCells=$true,
+
+    [parameter(Mandatory=$false)]
+	[alias("w")]
+	[bool]$InstallWebClient=$true
 )
 
 $OutputEncoding=[System.Text.UTF8Encoding]::UTF8
@@ -80,7 +91,9 @@ if($InstallDatabases -eq $true){
 }
 
 
-. .\install-i2b2.ps1 
+if($InstallCells -eq $true){
+    . .\install-i2b2.ps1 
+}
 
 
 #clean up after ourself
