@@ -66,7 +66,7 @@ function removeAnt {
     }    
 }
  
- function removeIIS{
+function removeIIS{
     $iis =  Get-WindowsOptionalFeature -FeatureName IIS-WebServerRole -Online
 
     if($iis.State -eq "Enabled"){
@@ -76,7 +76,7 @@ function removeAnt {
 
  }
 
- function removePHP{
+function removePHP{
     if(Test-Path "c:\php"){
         echo "Removing PHP"
         exec iisreset '/stop'
@@ -88,11 +88,11 @@ function removeAnt {
  }
 
 
- #removeAnt
- #removeJBOSS
- #removeJava
+removeAnt
+removeJBOSS
+removeJava
  
- #removePHP
- #removeIIS
+removePHP
+removeIIS
 
 echo "done."
