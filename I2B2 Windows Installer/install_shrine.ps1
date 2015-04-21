@@ -49,11 +49,7 @@ PowerShell will number them for you when it displays your help text to a user.
 Param(
     [parameter(Mandatory=$false)]
 	[AllowEmptyString()]
-	[string]$tomcat_path,
-
-    [parameter(Mandatory=$false)]
-	[alias("s")]
-	[bool]$InstallService=$true
+	[string]$tomcat_path
 )
 
 
@@ -70,8 +66,8 @@ function prepareInstall(){
 
     #______________________________________________________________________________
 
-    echo "creating directories..."
     #Create temp downloads folder
+    echo "creating directories..."
     if(!(Test-Path $Env:TOMCAT\shrine\_downloads)){
         echo "creating temporary download location..."
         mkdir $Env:TOMCAT\shrine\_downloads
@@ -90,6 +86,7 @@ function prepareInstall(){
     if(!(Test-Path $_SHRINE_HOME\setup)){
         mkdir $_SHRINE_HOME\setup
     }
+    
     #Create temp folder for completed files
     if(!(Test-Path $_SHRINE_HOME\setup\ready)){
         mkdir $_SHRINE_HOME\setup\ready
@@ -107,7 +104,7 @@ function prepareInstall(){
     echo "Java is installed. Moving on..."
     
     echo "installing Subversion"
-    #Download Subversion
+    #Download and install Subversion
     $SVNUrl = "http://downloads.sourceforge.net/project/win32svn/1.8.11/apache22/svn-win32-1.8.11.zip?"
     Invoke-WebRequest  $SVNUrl -OutFile $_SHRINE_HOME\setup\subversion.zip -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
     unzip $_SHRINE_HOME\setup\subversion.zip $_SHRINE_HOME\setup\svn
@@ -137,11 +134,7 @@ function prepareInstall(){
 
 function installTomcatService{
 
-    #If $InstallService is $true (as default), this will install the Tomcat Windows Service.
-    #It will set the service to Automatic startup, rename it to Apache Tomcat 8.0 and start it.
-
-    #$Env:JAVA_HOME = "C:\Program Files\Java\jdk1.7.0_75"
-    #JAVA_HOME Set in configuration.ps1, Uncomment if configuration.ps1 is incorrect
+    #This will set the service to Automatic startup, rename it to Apache Tomcat 8.0 and start it.
 
     echo "installing Tomcat8 service..."
     & "$Env:CATALINA_HOME\bin\service.bat" install
@@ -157,8 +150,7 @@ function installTomcatService{
 
 function uninstallTomcatService{
 
-    #$Env:JAVA_HOME = "C:\Program Files\Java\jdk1.7.0_75"
-    #JAVA_HOME Set in configuration.ps1, Uncomment if configuration.ps1 is incorrect
+    #This will stop and uninstall the Apache Tomcat 8.0 service
 
     echo "uninstalling Tomcat8 service..."
     & "$Env:CATALINA_HOME\bin\service.bat" uninstall Tomcat8
@@ -201,7 +193,8 @@ function installShrine{
 
     echo "Beginning Shrine install..."
 
-    #This is where shrine install starts right now
+    #Creating URLs for downloading source files
+
     $ShrineQuickInstallUrl = "$_SHRINE_SVN_URL_BASE/code/install/i2b2-1.7/"
 
     $ShrineWar = "shrine-war-$_SHRINE_VERSION.war"
@@ -210,6 +203,7 @@ function installShrine{
     $ShrineProxy = "shrine-proxy-$_SHRINE_VERSION.war"
     $ShrineProxyURL = "$_NEXUS_URL_BASE/shrine-proxy/$_SHRINE_VERSION/$ShrineProxy"
 
+    $ShrineAdapterMappingsURL = "$_SHRINE_SVN_URL_BASE/ontology/SHRINE_Demo_Downloads/AdapterMappings_i2b2_DemoData.xml"
     
     echo "getting source files..."
     echo "downloading shrine and shrine-proxy war files..."
@@ -225,9 +219,6 @@ function installShrine{
     & "$_SHRINE_HOME\setup\svn\svn-win32-1.8.11\bin\svn.exe" checkout $_SHRINE_SVN_URL_BASE/code/shrine-webclient/  $_SHRINE_HOME\setup\shrine-webclient > $null
 
     echo "shrine-webclient downloaded."
-
-    $ShrineAdapterMappingsURL = "$_SHRINE_SVN_URL_BASE/ontology/SHRINE_Demo_Downloads/AdapterMappings_i2b2_DemoData.xml"
-
     echo "downloading AdapterMappings.xml file to tomcat..."
    
     Invoke-WebRequest $ShrineAdapterMappingsURL  -OutFile $_SHRINE_HOME\setup\AdapterMappings.xml
@@ -289,7 +280,7 @@ function installShrine{
 
 
     #Remove Shrine Setup Directory
-    Remove-Item $_SHRINE_HOME\setup\* -Recurse -Force
+    Remove-Item $_SHRINE_HOME\setup -Recurse -Force
 
     echo "all clean!"
     echo "restarting Tomcat Service (if installed)..."
@@ -301,8 +292,11 @@ function installShrine{
 
 function createCert{
 
-keytool -genkeypair -keysize 2048 -alias $_KEYSTORE_ALIAS -dname "CN=$_KEYSTORE_ALIAS, OU=$_KEYSTORE_HUMAN, O=SHRINE Network, L=$_KEYSTORE_CITY, S=$_KEYSTORE_STATE, C=$_KEYSTORE_COUNTRY" -keyalg RSA -keypass $_KEYSTORE_PASSWORD -storepass $_KEYSTORE_PASSWORD -keystore $_KEYSTORE_FILE -validity 7300
-keytool -export -alias $_KEYSTORE_ALIAS -keystore $_KEYSTORE_FILE -storepass $_KEYSTORE_PASSWORD -file "$_KEYSTORE_ALIAS.cer"
+    #This function will generate a keypair and a keystore according to the settings in common.ps1
+    #It will export the created certificate to the $_SHRINE_HOME location
+
+    keytool -genkeypair -keysize 2048 -alias $_KEYSTORE_ALIAS -dname "CN=$_KEYSTORE_ALIAS, OU=$_KEYSTORE_HUMAN, O=SHRINE Network, L=$_KEYSTORE_CITY, S=$_KEYSTORE_STATE, C=$_KEYSTORE_COUNTRY" -keyalg RSA -keypass $_KEYSTORE_PASSWORD -storepass $_KEYSTORE_PASSWORD -keystore $_KEYSTORE_FILE -validity 7300
+    keytool -export -alias $_KEYSTORE_ALIAS -keystore $_KEYSTORE_FILE -storepass $_KEYSTORE_PASSWORD -file "$_SHRINE_HOME\$_KEYSTORE_ALIAS.cer"
 
 }
 
