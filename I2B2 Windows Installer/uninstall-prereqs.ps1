@@ -11,21 +11,21 @@ function removeFromPath($path) {
 
 function removeJBOSS {
 
-    if(Test-Path "c:\opt\jboss"){
+    if(Test-Path $env:JBOSS_HOME){
 
            
         Stop-Service jboss
         #&$env:JBOSS_HOME\bin\service.bat stop
         &$env:JBOSS_HOME\bin\service.bat uninstall
 
-        Remove-Item C:\opt\jboss\licenses -recurse -force
-        Remove-Item C:\opt\jboss\bin\native -recurse -force
-        Remove-Item C:\opt\jboss\bin\*.exe -force
-        Remove-Item C:\opt\jboss\bin\service.bat -force
-        Remove-Item C:\opt\jboss\bin\README-service.txt -force
+        Remove-Item $env:JBOSS_HOME\licenses -recurse -force
+        Remove-Item $env:JBOSS_HOME\bin\native -recurse -force
+        Remove-Item $env:JBOSS_HOME\bin\*.exe -force
+        Remove-Item $env:JBOSS_HOME\bin\service.bat -force
+        Remove-Item $env:JBOSS_HOME\bin\README-service.txt -force
 
         echo "Removing JBOSS..."
-	    Remove-Item  "c:\opt\jboss" -recurse -force
+	    Remove-Item  $env:JBOSS_HOME -recurse -force
         removeFromPath "$env:JBOSS_HOME\bin"    
         [Environment]::SetEnvironmentVariable("JBOSS_HOME",$null,"Machine")
     } 
@@ -66,7 +66,7 @@ function removeAnt {
     }    
 }
  
- function removeIIS{
+function removeIIS{
     $iis =  Get-WindowsOptionalFeature -FeatureName IIS-WebServerRole -Online
 
     if($iis.State -eq "Enabled"){
@@ -76,7 +76,7 @@ function removeAnt {
 
  }
 
- function removePHP{
+function removePHP{
     if(Test-Path "c:\php"){
         echo "Removing PHP"
         exec iisreset '/stop'
@@ -88,11 +88,10 @@ function removeAnt {
  }
 
 
- #removeAnt
- #removeJBOSS
- #removeJava
- 
- #removePHP
- #removeIIS
+removeAnt
+removeJBOSS
+removeJava
+removePHP
+removeIIS
 
 echo "done."
