@@ -15,7 +15,8 @@ Current Features:
   * Create Databases
   * Create Users
   * Grant Permissions
-  * Run I2B2 Data Installation Ant Scripts
+  * Run I2B2 Data Installation Creatation Scripts
+  * Run I2B2 Demo Data Load Scripts
 3. I2B2 Cell Installation
 4. I2B2 Admin Tool Installation
 5. I2B2 Web Client Installation
