@@ -1,19 +1,7 @@
 
-
-echo "Extracting i2b2 source..."
-unzip $__sourceCodeZipFile $__sourceCodeRootFolder $true
-echo "Source extracted to $__sourceCodeRootFolder"
-
-if(!(Test-Path $__sourceCodeRootFolder))
-{
-    Throw "Source not extracted"
-}
-
 function installServerCommon {
     echo "Installing server common"
     cd $__sourceCodeRootFolder\edu.harvard.i2b2.server-common
-
-    cp build.properties build.properties.bak
 
     interpolate_file $__skelDirectory\i2b2\server-common\build.properties JBOSS_HOME (escape $env:JBOSS_HOME) | sc build.properties
 
@@ -27,11 +15,7 @@ function installPM{
     echo "Installing PM Cell"
     cd edu.harvard.i2b2.pm
 
-    cp build.properties build.properties.bak
-
     interpolate_file $__skelDirectory\i2b2\pm\build.properties JBOSS_HOME (escape $env:JBOSS_HOME) | sc build.properties
-
-    cp etc\jboss\pm-ds.xml etc\jboss\pm-ds.xml.bak
 
     interpolate_file $__skelDirectory\i2b2\pm\pm-ds.xml PM_DB_URL $PM_DB_URL | 
         interpolate PM_DB_USER $PM_DB_USER |
@@ -254,6 +238,15 @@ function installAdminTool{
 }
 
 
+echo "Extracting i2b2 source..."
+unzip $__sourceCodeZipFile $__sourceCodeRootFolder $true
+echo "Source extracted to $__sourceCodeRootFolder"
+
+if(!(Test-Path $__sourceCodeRootFolder))
+{
+    Throw "Source not extracted"
+}
+
 installServerCommon
 installPM
 installONT
@@ -261,7 +254,13 @@ installCRC
 installWorkplace
 installFR
 installIM
-installWebClient
-installAdminTool
+
+if($InstallWebClient -eq $true){
+    installWebClient
+}
+
+if($InstallAdminTool -eq $true){
+    installAdminTool
+}
 
 cd $__currentDirectory

@@ -12,6 +12,8 @@ $__skelDirectory = $__currentDirectory + "\skel"
 $__tempFolder = $__currentDirectory + "\.temp"
 
 $__sourceCodeZipFile = $__currentDirectory + "\_downloads\i2b2core-src-1704.zip"
+$__dataInstallationZipFile =  $__currentDirectory + "\_downloads\i2b2createdb-1704.zip"
+
 $__sourceCodeRootFolder = $__rootFolder + "\i2b2"
 
 $__webclientZipFile = $__currentDirectory + "\_downloads\i2b2webclient-1704.zip"
