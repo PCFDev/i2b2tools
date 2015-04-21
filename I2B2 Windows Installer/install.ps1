@@ -5,7 +5,7 @@ Install i2b2 on a windows server
 
 
 .DESCRIPTION
-The description is usually a longer, more detailed explanation of what the script or function does. Take as many lines as you need.
+This scripts is used to install i2b2 or portions o
 
 .PARAMETER InstallPrereqs
 Install the required software Java, Ant and JBoss (including JBoss as a service) as discussed in the i2b2 Server Requirements section of the installation guide.
@@ -42,11 +42,11 @@ Param(
 
     [parameter(Mandatory=$false)]
 	[alias("d")]
-	[bool]$InstallDatabases=$false,
+	[bool]$InstallDatabases=$true,
 
     [parameter(Mandatory=$false)]
 	[alias("data")]
-	[bool]$InstallDemoData=$false,
+	[bool]$InstallDemoData=$true,
 
     [parameter(Mandatory=$false)]
 	[alias("c")]
@@ -54,7 +54,11 @@ Param(
 
     [parameter(Mandatory=$false)]
 	[alias("w")]
-	[bool]$InstallWebClient=$true
+	[bool]$InstallWebClient=$true,
+
+    [parameter(Mandatory=$false)]
+	[alias("a")]
+	[bool]$InstallAdminTool=$true
 )
 
 $OutputEncoding=[System.Text.UTF8Encoding]::UTF8
@@ -63,15 +67,10 @@ $__timer = [Diagnostics.Stopwatch]::StartNew()
 
 . .\functions.ps1
 . .\configuration.ps1
-#. .\common.ps1
 . .\config-i2b2.ps1
 
- if(Test-Path $__rootFolder){
+ if((Test-Path $__rootFolder) -ne  $true){
 
- #Todo ... this is not proper
-
-} else {
- 
     New-Item $__rootFolder -Type directory -Force > $null
 
     echo "Created " $__rootFolder

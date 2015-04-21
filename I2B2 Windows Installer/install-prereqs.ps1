@@ -208,9 +208,17 @@ function installPHP{
 }
 
 installJava
+
+
 installAnt
-installJBoss
-installJBossService
-installAxis
-installIIS
-installPHP
+
+if($InstallCells -eq $true){
+    installJBoss
+    installJBossService
+    installAxis
+}
+
+if(($InstallWebClient -eq $true) -or ($InstallAdminTool -eq $true)){
+    installIIS
+    installPHP
+}

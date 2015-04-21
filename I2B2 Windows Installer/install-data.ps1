@@ -157,11 +157,40 @@ function installWork{
     echo "Work Data Installed"
 }
 
+
+echo "Verifing conenction to database server"
+
+try{
+    $conn = New-Object System.Data.SqlClient.SqlConnection
+    $conn.ConnectionString = "Server=$DEFAULT_DB_SERVER;Database=master;Uid=$DEFAULT_DB_ADMIN_USER;Pwd=$DEFAULT_DB_ADMIN_PASS;"
+    #$conn.ConnectionString = "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;"
+    $conn.open() > $null
+}
+catch {
+
+    echo "Could not conect to database server: $DEFAULT_DB_SERVER"
+    exit -1
+}
+
+echo "Extracting data creation scripts..."
+
+unzip $__dataInstallationZipFile $__sourceCodeRootFolder $true
+echo "Source extracted to $__sourceCodeRootFolder"
+
+if(!(Test-Path $__sourceCodeRootFolder))
+{
+    Throw "Data creation scripts not extracted"
+}
+
+cd $__sourceCodeRootFolder\edu.harvard.i2b2.data\Release_1-7\NewInstall
+
 installCrc
 installHive
 installIM
 installOnt
 installPM
 installWork
+
+cd $__currentDirectory
 
 echo "i2b2 Data Installation Completed"
