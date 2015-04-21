@@ -11,10 +11,10 @@ Current Features:
   * JBOSS Service
   * IIS
   * PHP
-2. I2B2 Data Installation (SQL Server Only)
-  * Create Databases
-  * Create Users
-  * Grant Permissions
+2. I2B2 Data Installation
+  * Create Databases (SQL Server Only)
+  * Create Users (SQL Server Only)
+  * Grant Permissions (SQL Server Only)
   * Run I2B2 Data Installation Creatation Scripts
   * Run I2B2 Demo Data Load Scripts
 3. I2B2 Cell Installation
