@@ -3,6 +3,10 @@
 function installCrc{
 
     cd Crcdata
+    $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
+
+    #HACK to get ant to run   
+    #cp data_build.xml build.xml
 
     interpolate_file $__skelDirectory\i2b2\data\db.properties DB_TYPE $DEFAULT_DB_TYPE |
         interpolate DB_USER $CRC_DB_USER |
@@ -13,15 +17,15 @@ function installCrc{
         interpolate I2B2_PROJECT_NAME $I2B2_PROJECT_NAME |
         sc db.properties
     
-    echo "Installing CRC Tables"
-    ant –file data_build.xml create_crcdata_tables_release_1-7
+    echo "Installing CRC Tables"    
+    ant -f "$buildFile" create_crcdata_tables_release_1-7
 
     echo "Installing CRC Stored Procedures"
-    ant –file data_build.xml create_procedures_release_1-7
+    ant -f "$buildFile" create_procedures_release_1-7
 
     if($InstallDemoData -eq $true){
         echo "Loading CRC demo data"
-        ant –file data_build.xml db_demodata_load_data
+        ant -f "$buildFile" db_demodata_load_data        
     }
     
     cd ..
@@ -31,6 +35,10 @@ function installCrc{
 
 function installHive{
     cd Hivedata
+    $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
+
+    #HACK to get ant to run   
+    #cp data_build.xml build.xml
 
     interpolate_file $__skelDirectory\i2b2\data\db.properties DB_TYPE $DEFAULT_DB_TYPE |
         interpolate DB_USER $HIVE_DB_USER |
@@ -42,11 +50,14 @@ function installHive{
         sc db.properties
 
     echo "Installing Hive Tables"
-    ant –file data_build.xml create_hivedata_tables_release_1-7
-  
+
+    ant -f "$buildFile" create_hivedata_tables_release_1-7
+
+
     if($InstallDemoData -eq $true){
-        echo "Loading Hive demo data"
-        ant –file data_build.xml db_hivedata_load_data
+       echo "Loading Hive demo data"
+
+       ant -f "$buildFile" db_hivedata_load_data
     }
 
     cd ..
@@ -56,6 +67,10 @@ function installHive{
 function installIM{
 
     cd Imdata
+    $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
+
+    #HACK to get ant to run   
+    #cp data_build.xml build.xml
 
     interpolate_file $__skelDirectory\i2b2\data\db.properties DB_TYPE $DEFAULT_DB_TYPE |
         interpolate DB_USER $IM_DB_USER |
@@ -67,11 +82,11 @@ function installIM{
         sc db.properties
 
     echo "Installing IM Tables"
-    ant –file data_build.xml create_imdata_tables_release_1-7
+    ant -f "$buildFile" create_imdata_tables_release_1-7
     
     if($InstallDemoData -eq $true){
         echo "Loading IM demo data"
-        ant –file data_build.xml db_imdata_load_data
+        ant -f "$buildFile"  db_imdata_load_data
     }
 
     cd ..
@@ -81,6 +96,11 @@ function installIM{
 function installOnt{
 
     cd Metadata
+    $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
+
+    #HACK to get ant to run   
+    #cp data_build.xml build.xml
+
 
     interpolate_file $__skelDirectory\i2b2\data\db.properties DB_TYPE $DEFAULT_DB_TYPE |
         interpolate DB_USER $ONT_DB_USER |
@@ -92,11 +112,11 @@ function installOnt{
         sc db.properties
 
     echo "Installing ONT Tables"
-    ant –file data_build.xml create_metadata_tables_release_1-7
+    ant -f "$buildFile" create_metadata_tables_release_1-7
     
     if($InstallDemoData -eq $true){
         echo "Loading ONT demo data"
-        ant –file data_build.xml db_metadata_load_data
+        ant -f "$buildFile" db_metadata_load_data
     }
 
     cd ..
@@ -105,7 +125,11 @@ function installOnt{
 
 function installPM{
 
-    cd Pmdata
+    cd Pmdata        
+    $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
+
+    #HACK to get ant to run   
+    #cp data_build.xml build.xml
 
 
     interpolate_file $__skelDirectory\i2b2\data\db.properties DB_TYPE $DEFAULT_DB_TYPE |
@@ -118,14 +142,17 @@ function installPM{
         sc db.properties
 
     echo "Installing PM Tables"
-    ant –file data_build.xml create_pmdata_tables_release_1-7
+
+    ant -f "$buildFile" create_pmdata_tables_release_1-7
 
     echo "Installing PM Triggers"
-    ant –file data_build.xml create_triggers_release_1-7
+    
+
+    ant -f "$buildFile" create_triggers_release_1-7
     
     if($InstallDemoData -eq $true){
         echo "Loading PM demo data"
-        ant –file data_build.xml db_pmdata_load_data
+        ant -f "$buildFile" db_pmdata_load_data
     }
 
     cd ..
@@ -135,6 +162,12 @@ function installPM{
 function installWork{
 
     cd Workdata
+    
+    $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
+
+    
+    #HACK to get ant to run   
+    #cp data_build.xml build.xml
 
     interpolate_file $__skelDirectory\i2b2\data\db.properties DB_TYPE $DEFAULT_DB_TYPE |
         interpolate DB_USER $WORK_DB_USER |
@@ -146,11 +179,13 @@ function installWork{
         sc db.properties
 
     echo "Installing Work Tables"
-    ant –file data_build.xml create_workdata_tables_release_1-7
+    #ant create_workdata_tables_release_1-7
+
+    ant -f "$buildFile" create_workdata_tables_release_1-7
   
     if($InstallDemoData -eq $true){
         echo "Loading Work demo data"
-        ant –file data_build.xml db_workdata_load_data
+        ant -f "$buildFile" db_workdata_load_data
     }
 
     cd ..
@@ -164,7 +199,12 @@ try{
     $conn = New-Object System.Data.SqlClient.SqlConnection
     $conn.ConnectionString = "Server=$DEFAULT_DB_SERVER;Database=master;Uid=$DEFAULT_DB_ADMIN_USER;Pwd=$DEFAULT_DB_ADMIN_PASS;"
     #$conn.ConnectionString = "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;"
-    $conn.open() > $null
+    $conn.Open() > $null
+    
+    echo "Connected to $DEFAULT_DB_SERVER"
+
+    $conn.Close()
+    $conn.Dispose()
 }
 catch {
 
@@ -173,7 +213,6 @@ catch {
 }
 
 echo "Extracting data creation scripts..."
-
 unzip $__dataInstallationZipFile $__sourceCodeRootFolder $true
 echo "Source extracted to $__sourceCodeRootFolder"
 

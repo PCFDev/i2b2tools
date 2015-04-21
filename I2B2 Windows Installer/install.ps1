@@ -98,6 +98,8 @@ if($InstallCells -eq $true){
 #clean up after ourself
 #removeTempFolder
 
-net start jboss
+if((Get-Service jboss).Status -eq "Stopped") {
+    net start jboss
+}
 
 formatElapsedTime $__timer.Elapsed
