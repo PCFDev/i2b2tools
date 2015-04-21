@@ -1,8 +1,10 @@
-﻿echo "Starting i2b2 Data Installation"
-
-function installCrc{
+﻿function installCrc{
 
     cd Crcdata
+
+    createDatabase $CRC_DB_NAME
+    createUser $CRC_DB_NAME $CRC_DB_USER $CRC_DB_PASS $DEFAULT_DB_SCHEMA
+
     $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
 
     #HACK to get ant to run   
@@ -37,6 +39,10 @@ function installHive{
     cd Hivedata
     $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
 
+    createDatabase $HIVE_DB_NAME
+    createUser $HIVE_DB_NAME $HIVE_DB_USER $HIVE_DB_PASS $DEFAULT_DB_SCHEMA
+
+
     #HACK to get ant to run   
     #cp data_build.xml build.xml
 
@@ -69,6 +75,9 @@ function installIM{
     cd Imdata
     $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
 
+    createDatabase $IM_DB_NAME
+    createUser $IM_DB_NAME $IM_DB_USER $IM_DB_PASS $DEFAULT_DB_SCHEMA
+
     #HACK to get ant to run   
     #cp data_build.xml build.xml
 
@@ -97,6 +106,9 @@ function installOnt{
 
     cd Metadata
     $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
+
+    createDatabase $ONT_DB_NAME
+    createUser $ONT_DB_NAME $ONT_DB_USER $ONT_DB_PASS $DEFAULT_DB_SCHEMA
 
     #HACK to get ant to run   
     #cp data_build.xml build.xml
@@ -127,6 +139,9 @@ function installPM{
 
     cd Pmdata        
     $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
+
+    createDatabase $PM_DB_NAME
+    createUser $PM_DB_NAME $PM_DB_USER $PM_DB_PASS $DEFAULT_DB_SCHEMA
 
     #HACK to get ant to run   
     #cp data_build.xml build.xml
@@ -161,10 +176,11 @@ function installPM{
 
 function installWork{
 
-    cd Workdata
-    
+    cd Workdata    
     $buildFile = (Get-Item -Path ".\" -Verbose).FullName + "\data_build.xml"
 
+    createDatabase $WORK_DB_NAME
+    createUser $WORK_DB_NAME $WORK_DB_USER $WORK_DB_PASS $DEFAULT_DB_SCHEMA
     
     #HACK to get ant to run   
     #cp data_build.xml build.xml
@@ -192,22 +208,55 @@ function installWork{
     echo "Work Data Installed"
 }
 
+function createDatabase($dbname){
+    echo "Creating database: $dbname"
+
+    $sql = interpolate_file $__skelDirectory\i2b2\data\$DEFAULT_DB_TYPE\create_database.sql DB_NAME $dbname
+
+    $cmd =  $conn.CreateCommand()
+    
+    $cmd.CommandText = $sql
+
+    $cmd.ExecuteNonQuery() > $null
+
+    $cmd.Dispose()
+
+    echo "$dbname created"
+
+}
+
+function createUser($dbname, $user, $pass, $schema){
+    echo "Creating user: $user"
+
+    $sql = interpolate_file $__skelDirectory\i2b2\data\$DEFAULT_DB_TYPE\create_user.sql DB_NAME $dbname |
+        interpolate DB_USER $user |
+        interpolate DB_PASS $pass |
+        interpolate DB_SCHEMA $schema    
+
+    $cmd =  $conn.CreateCommand()
+    
+    $cmd.CommandText = $sql
+
+    $cmd.ExecuteNonQuery() > $null
+
+    $cmd.Dispose()
+
+    echo "$user created"
+}
+
+echo "Starting i2b2 Data Installation"
 
 echo "Verifing conenction to database server"
 
-try{
-    $conn = New-Object System.Data.SqlClient.SqlConnection
-    $conn.ConnectionString = "Server=$DEFAULT_DB_SERVER;Database=master;Uid=$DEFAULT_DB_ADMIN_USER;Pwd=$DEFAULT_DB_ADMIN_PASS;"
-    #$conn.ConnectionString = "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;"
-    $conn.Open() > $null
-    
+$conn = New-Object System.Data.SqlClient.SqlConnection
+$conn.ConnectionString = "Server=$DEFAULT_DB_SERVER;Database=master;Uid=$DEFAULT_DB_ADMIN_USER;Pwd=$DEFAULT_DB_ADMIN_PASS;"
+   
+ 
+try{    
+    $conn.Open() > $null    
     echo "Connected to $DEFAULT_DB_SERVER"
-
-    $conn.Close()
-    $conn.Dispose()
 }
 catch {
-
     echo "Could not conect to database server: $DEFAULT_DB_SERVER"
     exit -1
 }
@@ -229,6 +278,9 @@ installIM
 installOnt
 installPM
 installWork
+
+$conn.Close()
+$conn.Dispose()
 
 cd $__currentDirectory
 
