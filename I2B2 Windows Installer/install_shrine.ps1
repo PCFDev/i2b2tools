@@ -295,9 +295,12 @@ function createCert{
     #This function will generate a keypair and a keystore according to the settings in common.ps1
     #It will export the created certificate to the $_SHRINE_HOME location
 
+    echo "Generating Shrine keystore and SSL certificate..."
+
     keytool -genkeypair -keysize 2048 -alias $_KEYSTORE_ALIAS -dname "CN=$_KEYSTORE_ALIAS, OU=$_KEYSTORE_HUMAN, O=SHRINE Network, L=$_KEYSTORE_CITY, S=$_KEYSTORE_STATE, C=$_KEYSTORE_COUNTRY" -keyalg RSA -keypass $_KEYSTORE_PASSWORD -storepass $_KEYSTORE_PASSWORD -keystore $_KEYSTORE_FILE -validity 7300
     keytool -export -alias $_KEYSTORE_ALIAS -keystore $_KEYSTORE_FILE -storepass $_KEYSTORE_PASSWORD -file "$_SHRINE_HOME\$_KEYSTORE_ALIAS.cer"
 
+    echo "complete."
 }
 
 $__timer = [Diagnostics.Stopwatch]::StartNew()
@@ -305,7 +308,8 @@ $__timer = [Diagnostics.Stopwatch]::StartNew()
 prepareInstall
 installTomcat
 installTomcatService
-installShrine
 createCert
+installShrine
+
     
 formatElapsedTime $__timer.Elapsed
