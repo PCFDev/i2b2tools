@@ -19,9 +19,7 @@ function installJava{
         echo "Downloading Java JDK"
     
         $client.downloadFile($__javaDownloadUrl, $__tempFolder + "\jdk.exe")
-        #HACK --- only for testing... uncomment the line above
-        #cp _downloads/jdk.exe $__tempFolder
-
+    
         echo "Java Downloaded"
 
         echo "Installing Java to $env:JAVA_HOME"
@@ -41,9 +39,7 @@ function installAnt {
         echo "Downloading ant"
   
         wget $__antDownloadUrl -OutFile $__tempFolder"\ant.zip"
-        #HACK --- only for testing... uncomment the line above
-        #cp _downloads/ant.zip $__tempFolder
-  
+
         echo "Ant Downloaded"
 
         echo "Installing Ant"
@@ -59,14 +55,11 @@ function installAnt {
 
 function installJBoss{
     if((test-path $env:JBOSS_HOME) -eq $false){
-
       
         echo "Downloading $__jbossDownloadUrl"
 
         wget $__jbossDownloadUrl -OutFile $__tempFolder\jboss.zip
-        #HACK --- only for testing... uncomment the line above
-        #cp _downloads/jboss.zip $__tempFolder
-
+     
         echo "JBOSS downloaded"
 
         echo "Installing JBOSS"
@@ -93,9 +86,7 @@ function installJBossService{
         echo "Downloading $__jbossServiceDownloadUrl"
     
         wget $__jbossServiceDownloadUrl -OutFile $__tempFolder\jboss-svc.zip
-        #HACK --- only for testing... uncomment the line above
-        #cp _downloads/jboss-svc.zip $__tempFolder
-
+            
         echo "JBOSS Service downloaded"
 
         echo "Installing JBOSS Service"
@@ -130,9 +121,6 @@ function installAxis{
        
         wget $__axisDownloadUrl -OutFile $__tempFolder\axis2-1.6.2-war.zip
       
-        #HACK -- used for testing
-        #cp _downloads\axis2-1.6.2-war.zip $__tempFolder\axis2-1.6.2-war.zip -force
-
         echo "AXIS downloaded"
 
         echo "Installing AXIS War"
@@ -169,13 +157,12 @@ function installPHP{
         echo "Downloading PHP"      
         #Reference: http://php.net/manual/en/install.windows.manual.php
         wget $__phpDownloadUrl -OutFile $__tempFolder/php.zip
-        #cp .\_downloads\php.zip $__tempFolder\php.zip
         echo "PHP Downloaded"
 
         echo "Installing PHP"
 
-        unzip $__tempFolder/php.zip $__phpInstallDirectory
-        cp $__skelDirectory\php\php.ini $__phpInstallDirectory\php.ini
+        unzip $__tempFolder/php.zip $__phpInstallFolder
+        cp $__skelDirectory\php\php.ini $__phpInstallFolder\php.ini
      
         echo "Downloading Visual C++ Redistributable for Visual Studio 2012 Update 4"
         wget $__vcRedistDownloadUrl -OutFile $__tempFolder/vcredist_x86.exe    
