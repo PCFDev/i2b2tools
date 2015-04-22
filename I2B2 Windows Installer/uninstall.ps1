@@ -223,7 +223,7 @@ function removeDatabase($dbname){
 
     $cmd.Dispose()
 
-    echo "$dbname created"
+    echo "Database $dbname removed"
 
 }
 
@@ -243,7 +243,7 @@ function removeUser($dbname, $user, $pass, $schema){
 
     $cmd.Dispose()
 
-    echo "$user created"
+    echo "User $user removed"
 }
 
 
@@ -260,11 +260,11 @@ if($RemoveDatabases -eq $true){
 }
 
 if($RemoveWebClient -eq $true){    
-    Remove-Item $__webclientInstallFolder\webclient
+    rm -r $__webclientInstallFolder\webclient -Force
 }
 
 if($RemoveAdminTool -eq $true){
-    Remove-Item $__webclientInstallFolder\admin
+   rm -r $__webclientInstallFolder\admin -Force
 }
 
 echo "done."
