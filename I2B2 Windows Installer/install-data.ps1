@@ -246,7 +246,7 @@ function createUser($dbname, $user, $pass, $schema){
 
 echo "Starting i2b2 Data Installation"
 
-echo "Verifing conenction to database server"
+echo "Verifing connection to database server"
 
 $conn = New-Object System.Data.SqlClient.SqlConnection
 $conn.ConnectionString = "Server=$DEFAULT_DB_SERVER;Database=master;Uid=$DEFAULT_DB_ADMIN_USER;Pwd=$DEFAULT_DB_ADMIN_PASS;"
@@ -257,7 +257,7 @@ try{
     echo "Connected to $DEFAULT_DB_SERVER"
 }
 catch {
-    echo "Could not conect to database server: $DEFAULT_DB_SERVER"
+    echo "Could not connect to database server: $DEFAULT_DB_SERVER"
     exit -1
 }
 
