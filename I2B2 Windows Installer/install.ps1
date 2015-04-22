@@ -24,6 +24,9 @@ Extracts the i2b2 web client to the IIS default web site
 .PARAMETER InstallAdminTool
 Extracts the i2b2 admin tool to the IIS default web site
 
+.PARAMETER InstallShrine
+Runs automated install for the SHRINE extension of i2b2
+
 .EXAMPLE
 .\install
 Runs the installation of the i2b2 Server Requirements, i2b2 cells, the Data Installation process and loads the demo data
@@ -32,15 +35,20 @@ Runs the installation of the i2b2 Server Requirements, i2b2 cells, the Data Inst
 .\install -d $false
 Runs the installation of the i2b2 Server Requirements and skips the Data Installation process
 
+.EXAMPLE
+.\install -demo $false
+Runs the installation of the i2b2 Server Requirements and the Data Installation process but does not load the demo data
 
 .EXAMPLE
 .\install -p $false
 Skips the installation of the i2b2 Server Requirements and runs the rest of the installation process assuming the pre-reqs are already installed
 
-
 .EXAMPLE
 .\install -p $false -d $false
 Skips the installation of the i2b2 Server Requirements and the Data Installation process and runs the rest of the installation process assuming the pre-reqs are already installed
+
+.\install -s $true
+Runs the installation of the i2b2 Server Requirements, i2b2 cells, the Data Installation process, loads the demo data and installs shrine
 
 #>
 [CmdletBinding()]
@@ -54,7 +62,7 @@ Param(
 	[bool]$InstallDatabases=$true,
 
     [parameter(Mandatory=$false)]
-	[alias("data")]
+	[alias("demo")]
 	[bool]$InstallDemoData=$true,
 
     [parameter(Mandatory=$false)]
@@ -67,10 +75,12 @@ Param(
 
     [parameter(Mandatory=$false)]
 	[alias("a")]
-	[bool]$InstallAdminTool=$true
+	[bool]$InstallAdminTool=$true,
+    
+    [parameter(Mandatory=$false)]
+	[alias("s")]
+	[bool]$InstallShrine=$false
 )
-
-$OutputEncoding=[System.Text.UTF8Encoding]::UTF8
 
 $__timer = [Diagnostics.Stopwatch]::StartNew()
 
@@ -93,16 +103,17 @@ if($InstallPrereqs -eq $true){
     . .\install-prereqs.ps1
 }
 
-
 if($InstallDatabases -eq $true){    
     . .\install-data.ps1
 }
-
 
 if($InstallCells -eq $true){
     . .\install-i2b2.ps1 
 }
 
+if($InstallShrine -eq $true){
+    . .\install_shrine.ps1
+}
 
 #clean up after ourself
 removeTempFolder
