@@ -7,7 +7,7 @@
 		{ 
 		  domain: "I2B2_DOMAIN",
 		  name: "I2B2_HIVE_NAME",
-		  urlCellPM: "PM_SERVICE_URL",
+		  urlCellPM: "PM_SERVICE_URL/",
 		  allowAnalysis: true,
 		  debug: false
 		}
