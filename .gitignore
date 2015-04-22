@@ -4,7 +4,7 @@
 .DS_Store
 .svn
 *.log
-*.zip
+#*.zip
 .temp/
 _downloads/
 

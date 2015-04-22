@@ -1,4 +1,38 @@
-﻿
+﻿<#
+.SYNOPSIS
+Uninstall i2b2 from a windows server
+
+.DESCRIPTION
+This scripts is used to uninstall i2b2 or portions of an i2b2 system such as the web client, databases, demo data etc.
+
+.PARAMETER RemovePrereqs
+Remove the required software Java, Ant and JBoss (including JBoss as a service) as discussed in the i2b2 Server Requirements section of the installation guide.
+
+.PARAMETER RemoveDatabases
+Drops the i2b2 database(s) as described Data Installation Section of the Installation Guide. WARNING!!!! THIS CANNOT BE UNDONE. THE DATA IN THESE DATABASES WILL BE LOST
+
+.PARAMETER RemoveCells
+Removes the JBOSS deployments on the i2b2 core cells
+
+.PARAMETER RemoveWebClient
+Deletes the i2b2 web client from the IIS default web site
+
+.PARAMETER RemoveWebClient
+Deletes the i2b2 admin tool from the IIS default web site
+
+.EXAMPLE
+.\uninstall
+Removes the installation of the i2b2 Server Requirements, i2b2 cells, the web client and the admin tool. By default the script leaves the database(s) intact
+
+.EXAMPLE
+.\uninstall -d $true
+Removes the installation of the i2b2 Server Requirements, i2b2 cells, the web client and the admin tool and drops all of the i2b2 databases
+
+.EXAMPLE
+.\uninstall -c $false
+Removes the installation of the i2b2 Server Requirements, the web client and the admin tool. The i2b2 cell deployments are backed up and leaves the database(s) intact
+
+#>
 [CmdletBinding()]
 Param(
     [parameter(Mandatory=$false)]

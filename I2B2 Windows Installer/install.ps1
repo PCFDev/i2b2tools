@@ -3,37 +3,46 @@
 .SYNOPSIS
 Install i2b2 on a windows server
 
-
 .DESCRIPTION
-This scripts is used to install i2b2 or portions o
+This scripts is used to install i2b2 or portions of an i2b2 system such as the web client, databases, demo data etc.
 
 .PARAMETER InstallPrereqs
 Install the required software Java, Ant and JBoss (including JBoss as a service) as discussed in the i2b2 Server Requirements section of the installation guide.
 
 .PARAMETER InstallDatabases
-Run the ant scripts from the Data Installation Section of the Installation Guide (requires the createdb i2b2 package)
+Run the ant scripts from the Data Installation Section of the Installation Guide
+
+.PARAMETER InstallDemoData
+Loads the i2b2 demo data into after creating the i2b2 database(s)
+
+.PARAMETER InstallCells
+Compiles and deploys all of the i2b2 core cells
+
+.PARAMETER InstallWebClient
+Extracts the i2b2 web client to the IIS default web site
+
+.PARAMETER InstallAdminTool
+Extracts the i2b2 admin tool to the IIS default web site
 
 .EXAMPLE
-.\Install-I2B2
+.\install
+Runs the installation of the i2b2 Server Requirements, i2b2 cells, the Data Installation process and loads the demo data
+
+.EXAMPLE
+.\install -d $false
 Runs the installation of the i2b2 Server Requirements and skips the Data Installation process
 
-.EXAMPLE
-.\Install-I2B2 -d $false
-Runs the installation of the i2b2 Server Requirements and skips the Data Installation process
-
 
 .EXAMPLE
-.\Install-I2B2 -p $false
-Skips the installation of the i2b2 Server Requirements and the Data Installation process
+.\install -p $false
+Skips the installation of the i2b2 Server Requirements and runs the rest of the installation process assuming the pre-reqs are already installed
 
 
 .EXAMPLE
-.\Install-I2B2 -p $false -d $false
-Skips the installation of the i2b2 Server Requirements and the Data Installation process
+.\install -p $false -d $false
+Skips the installation of the i2b2 Server Requirements and the Data Installation process and runs the rest of the installation process assuming the pre-reqs are already installed
 
 #>
-
-
 [CmdletBinding()]
 Param(
     [parameter(Mandatory=$false)]

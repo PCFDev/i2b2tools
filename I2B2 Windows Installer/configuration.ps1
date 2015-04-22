@@ -11,12 +11,12 @@ $__currentDirectory = (Get-Item -Path ".\" -Verbose).FullName
 $__skelDirectory = $__currentDirectory + "\skel"
 $__tempFolder = $__currentDirectory + "\.temp"
 
-$__sourceCodeZipFile = $__currentDirectory + "\_downloads\i2b2core-src-1704.zip"
-$__dataInstallationZipFile =  $__currentDirectory + "\_downloads\i2b2createdb-1704.zip"
+$__sourceCodeZipFile = $__skelDirectory + "\i2b2\i2b2core-src-1704.zip"
+$__dataInstallationZipFile = $__skelDirectory + "\i2b2\i2b2createdb-1704.zip"
 
 $__sourceCodeRootFolder = $__rootFolder + "\i2b2"
 
-$__webclientZipFile = $__currentDirectory + "\_downloads\i2b2webclient-1704.zip"
+$__webclientZipFile = $__skelDirectory + "\i2b2\i2b2webclient-1704.zip"
 $__webclientInstallFolder = "c:\inetpub\wwwroot"
 
 $__jbossFolderName = "jboss-as-7.1.1.Final"
