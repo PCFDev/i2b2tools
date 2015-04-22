@@ -208,8 +208,6 @@ function installPHP{
 }
 
 installJava
-
-
 installAnt
 
 if($InstallCells -eq $true){
