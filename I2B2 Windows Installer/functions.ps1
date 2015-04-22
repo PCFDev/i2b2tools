@@ -127,8 +127,7 @@ function isJavaInstalled {
     }
 }
 
-function removeTempFolder{
-  
+function removeTempFolder{  
 
     if(Test-Path $__tempFolder){
 	    Remove-Item $__tempFolder -recurse -force
@@ -136,9 +135,6 @@ function removeTempFolder{
 }
 
 function createTempFolder{
-    
-  
-    #removeTempFolder
 
     New-Item $__tempFolder -Type directory -Force > $null
 

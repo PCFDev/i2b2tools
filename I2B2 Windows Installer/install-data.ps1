@@ -244,6 +244,10 @@ function createUser($dbname, $user, $pass, $schema){
     echo "$user created"
 }
 
+
+require $DEFAULT_DB_ADMIN_USER "Database admin username must be set in the configuration"
+require $DEFAULT_DB_ADMIN_PASS "Database admin password must be set in the configuration"
+
 echo "Starting i2b2 Data Installation"
 
 echo "Verifing conenction to database server"

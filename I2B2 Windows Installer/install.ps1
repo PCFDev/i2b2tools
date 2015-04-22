@@ -94,7 +94,7 @@ if($InstallPrereqs -eq $true){
 }
 
 
-if($InstallDatabases -eq $true){
+if($InstallDatabases -eq $true){    
     . .\install-data.ps1
 }
 
@@ -105,10 +105,10 @@ if($InstallCells -eq $true){
 
 
 #clean up after ourself
-#removeTempFolder
+removeTempFolder
 
-if((Get-Service jboss).Status -eq "Stopped") {
-    net start jboss
+if((Get-Service jboss).Status -eq "Stopped") {    
+    Start-Service -Name JBOSS
 }
 
 formatElapsedTime $__timer.Elapsed
